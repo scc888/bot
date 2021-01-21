@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    url: jdbc:mysql://8.136.13.238:3306/bot?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: sric
+    driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 8.136.13.238
+    port: 6379
+    password: root
+    timeout: 60000
+    database: 0
+
+server:
+  port: 6999
+#  servlet:
+#   配置上下文
+#    context-path: /
+
+
+#配置mybatisPlus
+mybatis-plus:
+  #可以用完全限定名来指定这些POJO的引用
+  type-aliases-package: cn.sric.common.pojo
+  #查找Mapper的路径
+  mapper-locations:
+    - classpath:mapper/*/*Mapper.xml
+  global-config:
+    db-config:
+      #设置主键类型
+      id-type: auto
+    banner: true
+  configuration:
+    #骆驼峰命名下划线
+    map-underscore-to-camel-case: true
+      #打印日志输出
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+simbot:
+  core:
+    bots: 918527275:sc123123..
+    app-class: cn.sric.Application
+  component:
+    mirai:
+      protocol: ANDROID_WATCH
+      use-simbot-network-log: true
+      useSimbotBotLog: true
+      useSimbotNetworkLog: true
+
+
+## springboot 日志配置.
+logging:
+  level:
+    # 本项目日志debug
+    simbot.example: debug
+    # simbot相关内容日志debug
+    love.forte.simbot: debug
+url:
+  voice: /usr/sric/scc/voice/
+  image: /usr/sric/scc/images/
