@@ -1,5 +1,6 @@
 package cn.sric.common.config;
 
+import cn.hutool.core.lang.tree.TreeNodeConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -19,6 +20,7 @@ public class SpringBeanConfig implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+
     }
 
 

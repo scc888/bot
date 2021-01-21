@@ -2,18 +2,22 @@ package cn.sric.robot.listeners;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.sric.common.pojo.PrivateMessage;
+import cn.sric.dao.message.PrivateMessageMapper;
 import cn.sric.service.common.IListApiService;
 import cn.sric.service.file.IPictureFileService;
 import cn.sric.service.picture.IPictureDataService;
 import cn.sric.util.Cat;
-import cn.sric.util.RedisUtil;
-import cn.sric.util.TApiUtil;
+import cn.sric.util.ConstUtil;
 import cn.sric.util.param.SystemParam;
 import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import love.forte.simbot.annotation.Listener;
 import love.forte.simbot.annotation.OnPrivate;
+import love.forte.simbot.annotation.OnPrivateMsgRecall;
+import love.forte.simbot.api.message.MessageContent;
 import love.forte.simbot.api.message.events.PrivateMsg;
+import love.forte.simbot.api.message.events.PrivateMsgRecall;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.api.sender.Sender;
 import org.springframework.stereotype.Component;
@@ -31,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @version V1.0
  * @date 2020/12/31
  * @package cn.sric.robot.listeners
- * @description
+ * @description 监听私聊消息
  **/
 @Component
 @Slf4j
@@ -52,20 +56,27 @@ public class PrivateListener {
 
     @Resource
     IPictureDataService iPictureDataService;
+    @Resource
+    PrivateMessageMapper privateMessageMapper;
 
-
-//    @OnPrivate
-//    @Filter(value = "点歌", matchType = MatchType.STARTS_WITH)
-//    public void privateMusic(PrivateMsg privateMsg, MsgSender sender) {
-//        String msg = privateMsg.getMsg();
-//        redisUtil.set(ConstUtil.PRIVATE + ":" + privateMsg.getAccountInfo().getAccountCode() + ":" + privateMsg.getId(), msg, 7200);
-//        msg = msg.replaceAll(" ", "");
-//
-//    }
 
     @OnPrivate
     public void refreshPicture() {
         pictureFileService.refresh();
+    }
+
+    @OnPrivateMsgRecall
+    public void privateMsgRecall(PrivateMsgRecall msgRecall, Sender sender) {
+        String id = msgRecall.getId();
+        id = id.replaceFirst("REC-", "");
+        QueryWrapper<PrivateMessage> query = new QueryWrapper<>();
+        query.eq("msg_id", id).select("message");
+        PrivateMessage privateMessage = privateMessageMapper.selectOne(query);
+        String msg = privateMessage.getMessage();
+        String code = msgRecall.getAccountInfo().getAccountCode();
+        String name = msgRecall.getAccountInfo().getAccountNickname();
+        sender.sendPrivateMsg(ConstUtil.QQ_CODE, "这个人\n账号:" + code + "\n昵称:" + name + "\n想撤回" + msg);
+        privateMessageMapper.updateRecall(id);
     }
 
 
@@ -73,7 +84,6 @@ public class PrivateListener {
     public void privateMessage(PrivateMsg privateMsg, MsgSender sender) throws InterruptedException {
         Sender senderMsg = sender.SENDER;
         String msg = privateMsg.getMsg();
-//        redisUtil.set(ConstUtil.PRIVATE + ":" + privateMsg.getAccountInfo().getAccountCode() + ":" + privateMsg.getId(), msg, 7200);
         msg = msg.replaceAll(" ", "");
         String picture = "来点图片";
         String baiDu = "百度";
@@ -115,9 +125,14 @@ public class PrivateListener {
         } else if (msg.startsWith("翻译")) {
             String translate = iListApiService.translate(msg);
             sender.SENDER.sendPrivateMsg(privateMsg, translate);
+        } else if (msg.equals("哈哈哈")) {
+
+
         } else {
             String gossip = iListApiService.gossip(msg);
-            sender.SENDER.sendPrivateMsg(privateMsg, gossip);
+            if (!gossip.contains("呵呵")) {
+                sender.SENDER.sendPrivateMsg(privateMsg, gossip);
+            }
         }
 
         PrivateMessage privateMessage = new PrivateMessage();
@@ -127,7 +142,7 @@ public class PrivateListener {
                 .setMessage(privateMsg.getMsg())
                 .setQqCode(privateMsg.getAccountInfo().getAccountCode()).setMsgId(privateMsg.getId())
                 .setRecipient(SystemParam.strCurrentQQ);
-        blockingQueue.put(privateMessage);
+        privateMessageMapper.insert(privateMessage);
     }
 
 

@@ -1,9 +1,9 @@
 package cn.sric.util;
 
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.format.DateTimeFormatter;
 
@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
  * @package cn.sric.util
  * @description
  **/
+@Component
 public class ConstUtil {
     /**
      * 腾讯AI智能聊天秘钥
@@ -40,12 +41,6 @@ public class ConstUtil {
      */
     private final static String SE_API_KEY = "555966255faa07e87f8578";
     String a = "https://api.lolicon.app/setu?apikey=555966255faa07e87f8578&num=10";
-
-    public static void main(String[] args) {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> forEntity = restTemplate.getForEntity(SET_URL, String.class);
-        System.out.println(forEntity.getBody());
-    }
 
 
     /**
@@ -123,28 +118,25 @@ public class ConstUtil {
 
 
     /**
-     * Linux图片路径
+     * 最终的路径
      */
-    public final static String LINUX_FILE_URL = "/usr/sric/scc/images/";
-    /**
-     * Windows 图片路径
-     */
-    public final static String WINDOWS_FILE_URL = "C:/Users/sric/Desktop/image/";
+    public static String FILE_URL;
 
-    public final static String LINUX_VOICE_URL = "/usr/sric/scc/voice/";
+    @Value("${url.image}")
+    public void setFileUrl(String url) {
+        FILE_URL = url;
+    }
 
-
-    public final static String WINDOWS_VOICE_URL = "C:/Users/sric/Desktop/voice/";
 
     /**
      * 最终的路径
      */
-    public final static String FILE_URL = LINUX_FILE_URL;
+    public static String VOICE_URL;
 
-    /**
-     * 最终的路径
-     */
-    public final static String VOICE_URL = LINUX_VOICE_URL;
+    @Value("${url.voice}")
+    public void setVoiceUrl(String url) {
+        VOICE_URL = url;
+    }
 
 
     /**

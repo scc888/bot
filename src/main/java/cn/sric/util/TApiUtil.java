@@ -7,6 +7,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author sunchuanchuan
  * @version V1.0
@@ -27,27 +33,23 @@ public class TApiUtil {
      * @param msg 要转换的文字
      * @return 文件路径
      */
-    public static String getVoice(String msg) {
+    public static String getVoice(String msg) throws Exception {
         String retUrl = null;
-        try {
-            msg = msg.substring(msg.indexOf("说") + 1).replaceAll(" ", "");
-            //参数内容
-            String text = msg;//合成的文本内容
-            int speaker = 7;//语音发音人编码 普通话男声 1 静琪女声 5 欢馨女声 6 碧萱女声 7
-            int format = 3;//合成语音格式编码 PCM 1 WAV 2 MP3 3
-            int volume = 2;//合成语音音量 取值范围[-10, 10]，如-10表示音量相对默认值小10dB，0表示默认音量，10表示音量相对默认值大10dB
-            int speed = 100;// 合成语音语速，默认100
-            int aht = 5;//合成语音降低/升高半音个数，即改变音高，默认0
-            int apc = 26;//控制频谱翘曲的程度，改变说话人的音色，默认58
+        msg = msg.substring(msg.indexOf("说") + 1).replaceAll(" ", "");
+        //参数内容
+        String text = msg;//合成的文本内容
+        int speaker = 7;//语音发音人编码 普通话男声 1 静琪女声 5 欢馨女声 6 碧萱女声 7
+        int format = 3;//合成语音格式编码 PCM 1 WAV 2 MP3 3
+        int volume = 5;//合成语音音量 取值范围[-10, 10]，如-10表示音量相对默认值小10dB，0表示默认音量，10表示音量相对默认值大10dB
+        int speed = 100;// 合成语音语速，默认100
+        int aht = 6;//合成语音降低/升高半音个数，即改变音高，默认0
+        int apc = 76;//控制频谱翘曲的程度，改变说话人的音色，默认58
 //        String result = client.TtsSynthesis(text, speaker,format );//语音合成（AI Lab） 默认参数
-            String result = null;//语音合成（AI Lab） 全部参数
-            result = client.TtsSynthesis(text, speaker, format, volume, speed, aht, apc);
-            JSONObject jsonObject = JSON.parseObject(result);
-            String speech = jsonObject.getJSONObject("data").getString("speech");
-            retUrl = Base64Util.decodeBase64(speech, ConstUtil.VOICE_URL, "WAV", false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String result = null;//语音合成（AI Lab） 全部参数
+        result = client.TtsSynthesis(text, speaker, format, volume, speed, aht, apc);
+        JSONObject jsonObject = JSON.parseObject(result);
+        String speech = jsonObject.getJSONObject("data").getString("speech");
+        retUrl = Base64Util.decodeBase64(speech, ConstUtil.VOICE_URL, "WAV", false);
         return retUrl;
     }
 
@@ -75,6 +77,7 @@ public class TApiUtil {
 
     /**
      * 判断文字的语言
+     *
      * @param text
      * @return
      */
@@ -91,7 +94,37 @@ public class TApiUtil {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(language("123"));
+
+    /**
+     * 意图成分识别
+     *
+     * @param text
+     * @return
+     */
+    @Deprecated
+    public static String intention(String text) {
+        //参数内容
+        String result = null;//意图成分识别
+        try {
+            result = aipNlp.nlpWordcom(text);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
+
+
+    @Deprecated
+    public static String emotion(String text) {
+        String result = null;
+        try {
+            result = aipNlp.nlpTextpolar(text);//情感分析识别
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+
 }

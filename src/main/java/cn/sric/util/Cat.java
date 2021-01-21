@@ -44,6 +44,10 @@ public class Cat {
         return emoji;
     }
 
+    public static String shake() {
+        String shake = STRING_TEMPLATE.shake();
+        return shake;
+    }
 
     public static String getImage(String file) {
         return STRING_TEMPLATE.image(file);

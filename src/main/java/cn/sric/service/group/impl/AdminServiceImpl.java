@@ -56,11 +56,12 @@ public class AdminServiceImpl implements AdminService {
                 }
                 return;
             }
-//            boolean meIsAdmin = isAdmin(groupId, SystemParam.strCurrentQQ);
-//            if (!meIsAdmin) {
-//                sender.SENDER.sendGroupMsg(groupId, Cat.at(qqCode) + "我的当前的权限还不能禁言 (T.T)");
-//                return;
-//            }
+            boolean meIsAdmin = isAdmin(groupId, SystemParam.strCurrentQQ);
+            if (!meIsAdmin) {
+                sender.SENDER.sendGroupMsg(groupId, Cat.at(qqCode) + "我的当前的权限还不能禁言 (T.T)");
+
+                return;
+            }
             String result = msg.substring(msg.indexOf("餐") + 1).trim();
             if (result.length() == 0) {
                 duration = ran;
