@@ -21,6 +21,7 @@ import love.forte.simbot.api.message.events.PrivateMsgRecall;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.api.sender.Sender;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -84,34 +85,38 @@ public class PrivateListener {
     public void privateMessage(PrivateMsg privateMsg, MsgSender sender) throws InterruptedException {
         Sender senderMsg = sender.SENDER;
         String msg = privateMsg.getMsg();
-        msg = msg.replaceAll(" ", "");
-        String picture = "来点图片";
-        String baiDu = "百度";
-        String review = "网易云热评";
-        String qr = "获取二维码";
-        String musicTest = "点歌";
         String getCountPicture = "查看总数";
-        if (msg.equals(picture)) {
+        msg = msg.replaceAll(" ", "");
+        if (msg.startsWith(ConstUtil.PICTURE) || msg.startsWith(ConstUtil.TU_LAI)) {
+            String finalMsg = msg;
             threadPoolExecutorUtil.execute(() -> {
+                String like = null;
+                if (finalMsg.contains(ConstUtil.LIKE)) {
+                    like = finalMsg.substring(finalMsg.indexOf(ConstUtil.LIKE) + 4);
+                }
                 senderMsg.sendPrivateMsg(privateMsg, "请稍后");
                 int i = RandomUtil.randomInt(1, 6);
-                String url = pictureFileService.randomFind(i == 1);
-                senderMsg.sendPrivateMsg(privateMsg, i == 1 ? Cat.getImage(url, true) : Cat.getImage(url));
+                String url = pictureFileService.randomFind(i == 1, like);
+                if (!StringUtils.isEmpty(url)) {
+                    senderMsg.sendPrivateMsg(privateMsg, i == 1 ? Cat.getImage(url, true) : Cat.getImage(url));
+                } else {
+                    senderMsg.sendPrivateMsg(privateMsg, "找不到你想要的这种图");
+                }
             });
-        } else if (msg.contains(baiDu)) {
+        } else if (msg.startsWith(ConstUtil.BAI_DU)) {
             String ret = iListApiService.letMeBaiDu(msg);
             senderMsg.sendPrivateMsg(privateMsg, ret);
-        } else if (msg.equals(review)) {
+        } else if (msg.equals(ConstUtil.REVIEW)) {
             Map<String, String> map = iListApiService.review();
             senderMsg.sendPrivateMsg(privateMsg, map.get("review"));
             senderMsg.sendPrivateMsg(privateMsg, map.get("music"));
-        } else if (msg.startsWith(qr)) {
+        } else if (msg.startsWith(ConstUtil.QR)) {
             String qrUrl = iListApiService.findQr(msg);
-            String image = Cat.getImage(qr);
-            senderMsg.sendPrivateMsg(privateMsg, image + "\n" + qr);
+            String image = Cat.getImage(ConstUtil.QR);
+            senderMsg.sendPrivateMsg(privateMsg, image + "\n");
             File file = new File(qrUrl);
             file.delete();
-        } else if (msg.startsWith(musicTest)) {
+        } else if (msg.startsWith(ConstUtil.MUSIC_TEST)) {
             int index = msg.indexOf("点歌");
             msg = msg.substring(index + 2);
             String music = Cat.getMusic(msg);
@@ -120,14 +125,9 @@ public class PrivateListener {
         } else if (msg.equals(getCountPicture)) {
             sender.SENDER.sendPrivateMsg(privateMsg, "总数数量为:" + iPictureDataService.findPictureCount(false));
             sender.SENDER.sendPrivateMsg(privateMsg, "true数量为:" + iPictureDataService.findPictureCount(true));
-        } else if (msg.equals("刷新图库")) {
-
-        } else if (msg.startsWith("翻译")) {
-            String translate = iListApiService.translate(msg);
-            sender.SENDER.sendPrivateMsg(privateMsg, translate);
-        } else if (msg.equals("哈哈哈")) {
-
-
+        } else if (msg.startsWith(ConstUtil.FAN_YI)) {
+            String ret = iListApiService.translate(msg);
+            sender.SENDER.sendPrivateMsg(privateMsg, ret);
         } else {
             String gossip = iListApiService.gossip(msg);
             if (!gossip.contains("呵呵")) {

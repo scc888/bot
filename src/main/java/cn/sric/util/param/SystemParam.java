@@ -16,10 +16,6 @@ public class SystemParam {
     public static String master;
 
     /**
-     * 骰子开关状态(存放处于开启状态的骰娘QQ和QQ群)
-     */
-
-    /**
      * 当前登录的人员的QQ
      */
     public static String strCurrentQQ;
@@ -39,6 +35,7 @@ public class SystemParam {
      * 异常提示语句
      */
     public static String errorMsg = "!无法识别的指令,行光已记录,master上线后会及时处理,";
+
 
 
 }

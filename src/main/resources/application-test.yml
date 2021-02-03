@@ -45,7 +45,6 @@ simbot:
       protocol: ANDROID_WATCH
       use-simbot-network-log: true
       useSimbotBotLog: true
-      useSimbotNetworkLog: true
 
 
 ## springboot 日志配置.

@@ -163,4 +163,8 @@ public class AdminServiceImpl implements AdminService {
         Object eval = se.eval(str);
         return eval;
     }
+
+    public static void main(String[] args) throws ScriptException {
+        System.out.println(eval("19*100"));
+    }
 }

@@ -62,7 +62,7 @@ public interface IPictureFileService {
      * @param is8
      * @return
      */
-    List<String> randomFind(int num, boolean is8);
+    List<String> randomFind(int num, boolean is8,String like);
 
 
     /**
@@ -71,7 +71,7 @@ public interface IPictureFileService {
      * @param is8
      * @return
      */
-    String randomFind(boolean is8);
+    String randomFind(boolean is8,String like);
 
 
     void refresh();

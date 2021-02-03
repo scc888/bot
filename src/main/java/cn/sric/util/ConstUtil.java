@@ -55,7 +55,7 @@ public class ConstUtil {
     /**
      * 网抑云热评
      */
-    public final static String REVIEW = "https://api.66mz8.com/api/music.163.php?format=json";
+    public final static String REVIEW_URL = "https://api.66mz8.com/api/music.163.php?format=json";
 
     public final static String PUBLIC_URL = "https://autumnfish.cn/";
 
@@ -116,6 +116,7 @@ public class ConstUtil {
      */
     public final static String LET_ME_RESULTS = "https://lmbtfy.cn/s/";
 
+    public final static String sweet = "https://s.nmsl8.club/getloveword?type=1";
 
     /**
      * 最终的路径
@@ -151,4 +152,16 @@ public class ConstUtil {
      * 公共的字符串参数
      */
     public static final String XXX = "xxx";
+
+
+    public static String BANNED = "领取套餐";
+    public static String PICTURE = "来点图片";
+    public static String BAI_DU = "百度";
+    public static String REVIEW = "网易云热评";
+    public static String QR = "获取二维码";
+    public static String MUSIC_TEST = "点歌";
+    public static String FAN_YI = "翻译";
+    public static String LIKE = "like";
+    public static String TU_LAI = "图来";
+
 }

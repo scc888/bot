@@ -150,11 +150,9 @@ public class IListApiServiceImpl implements IListApiService {
 
 
     public static void main(String[] args) throws Exception {
-        //参数内容
-        String text = "喔";//待识别文本
-        int force = 0;//是否强制从候选语言中选择（只对二选一有效）
-        String result = aipNlp.nlpTextDetect(text, force);//语种识别
-        System.out.println(result);
+        IListApiServiceImpl iListApiService = new IListApiServiceImpl();
+        System.out.println(iListApiService.voice("刘叔牛逼"));
+
     }
 }
 

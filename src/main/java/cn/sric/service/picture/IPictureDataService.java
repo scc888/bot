@@ -37,7 +37,7 @@ public interface IPictureDataService {
      * @param is8
      * @return
      */
-    List<PictureData> randomFind(int num, boolean is8);
+    List<PictureData> randomFind(int num, boolean is8,String like);
 
 
 }

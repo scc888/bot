@@ -42,8 +42,8 @@ public class TApiUtil {
         int format = 3;//合成语音格式编码 PCM 1 WAV 2 MP3 3
         int volume = 5;//合成语音音量 取值范围[-10, 10]，如-10表示音量相对默认值小10dB，0表示默认音量，10表示音量相对默认值大10dB
         int speed = 100;// 合成语音语速，默认100
-        int aht = 6;//合成语音降低/升高半音个数，即改变音高，默认0
-        int apc = 76;//控制频谱翘曲的程度，改变说话人的音色，默认58
+        int aht = 0;//合成语音降低/升高半音个数，即改变音高，默认0
+        int apc = 58;//控制频谱翘曲的程度，改变说话人的音色，默认58
 //        String result = client.TtsSynthesis(text, speaker,format );//语音合成（AI Lab） 默认参数
         String result = null;//语音合成（AI Lab） 全部参数
         result = client.TtsSynthesis(text, speaker, format, volume, speed, aht, apc);
@@ -125,6 +125,8 @@ public class TApiUtil {
         return result;
     }
 
-
+    public static void main(String[] args) throws Exception {
+        System.out.println(getVoice("张俊高数大家,红鲤鱼与绿鲤鱼与驴"));
+    }
 
 }

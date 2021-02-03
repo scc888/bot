@@ -115,8 +115,8 @@ public class PictureFileServiceImpl implements IPictureFileService {
     }
 
     @Override
-    public List<String> randomFind(int num, boolean is8) {
-        List<PictureData> pictureDataList = iPictureDataService.randomFind(num, is8);
+    public List<String> randomFind(int num, boolean is8, String like) {
+        List<PictureData> pictureDataList = iPictureDataService.randomFind(num, is8, like);
         List<String> list = new ArrayList<>();
         pictureDataList.forEach(pictureData -> {
             String download;
@@ -134,11 +134,11 @@ public class PictureFileServiceImpl implements IPictureFileService {
     }
 
     @Override
-    public String randomFind(boolean is8) {
-        String url = randomFind(1, is8).get(0);
+    public String randomFind(boolean is8, String like) {
+        String url = randomFind(1, is8, like).get(0);
         while (true) {
             if (url.equals(ConstUtil.XXX)) {
-                randomFind(is8);
+                randomFind(is8, like);
             } else {
                 break;
             }

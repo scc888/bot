@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 public class IsNumberUtil {
 
 
-    private static Pattern DOUBLE_PATTERN = Pattern.compile("^\\d+\\.\\d+$");
-    private static Pattern INTEGER_PATTERN = Pattern.compile("[0-9]*");
+    private static final Pattern DOUBLE_PATTERN = Pattern.compile("^\\d+\\.\\d+$");
+    private static final Pattern INTEGER_PATTERN = Pattern.compile("[0-9]*");
 
     /**
      * 判断是否为正整数
