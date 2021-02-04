@@ -6,15 +6,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 创建线程池的帮助类
- * 可以使线程池状态为暂停，继续运行
- *
- * @author sunchuanchuan
- * @version V1.0
- * @date 2020/12/22
- * @package cn.sric.config
- * @description
- **/
+ * * 创建线程池的帮助类
+ * * 可以使线程池状态为暂停，继续运行
+ */
 public class ThreadPoolExecutorUtil extends ThreadPoolExecutor {
 
 

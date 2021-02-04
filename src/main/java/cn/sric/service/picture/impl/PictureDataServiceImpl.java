@@ -5,7 +5,6 @@ import cn.sric.dao.picture.PictureDataMapper;
 import cn.sric.service.picture.IPictureDataService;
 import cn.sric.util.ConstUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.injector.methods.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -36,7 +35,6 @@ public class PictureDataServiceImpl implements IPictureDataService {
     }
 
 
-
     @Override
     public boolean savePictureData(PictureData pictureData) {
         //根据pid 查询库里面是否存在数据
@@ -55,8 +53,8 @@ public class PictureDataServiceImpl implements IPictureDataService {
     }
 
     @Override
-    public List<PictureData> randomFind(int num, boolean is8) {
-        List<PictureData> pictureDataList = pictureDataMapper.randomFind(num, is8 ? 1 : 0);
+    public List<PictureData> randomFind(int num, boolean is8, String like) {
+        List<PictureData> pictureDataList = pictureDataMapper.randomFind(num, is8 ? 1 : 0, like);
         return pictureDataList;
     }
 }

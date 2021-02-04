@@ -12,14 +12,15 @@ import cn.sric.util.param.SystemParam;
 import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import love.forte.simbot.annotation.Filter;
 import love.forte.simbot.annotation.Listener;
 import love.forte.simbot.annotation.OnPrivate;
 import love.forte.simbot.annotation.OnPrivateMsgRecall;
-import love.forte.simbot.api.message.MessageContent;
 import love.forte.simbot.api.message.events.PrivateMsg;
 import love.forte.simbot.api.message.events.PrivateMsgRecall;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.api.sender.Sender;
+import love.forte.simbot.filter.FilterTargets;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -82,6 +83,7 @@ public class PrivateListener {
 
 
     @OnPrivate
+    @Filter(target = FilterTargets.MSG)
     public void privateMessage(PrivateMsg privateMsg, MsgSender sender) throws InterruptedException {
         Sender senderMsg = sender.SENDER;
         String msg = privateMsg.getMsg();

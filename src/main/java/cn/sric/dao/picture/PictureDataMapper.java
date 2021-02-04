@@ -24,7 +24,18 @@ public interface PictureDataMapper extends BaseMapper<PictureData> {
      * @param isR
      * @return
      */
-    List<PictureData> randomFind(@Param("num") Integer num,@Param("isR") Integer isR);
+    List<PictureData> randomFind(@Param("num") Integer num, @Param("isR") Integer isR);
+
+
+    /**
+     * 随机查询几条信息
+     *
+     * @param num  数量
+     * @param isR  boolean
+     * @param like tags
+     * @return
+     */
+    List<PictureData> randomFind(@Param("num") Integer num, @Param("isR") Integer isR, @Param("like") String like);
 
 
     /**

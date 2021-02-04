@@ -1,8 +1,5 @@
 package cn.sric.service.common.impl;
 
-import cn.hutool.crypto.digest.DigestAlgorithm;
-import cn.hutool.crypto.digest.Digester;
-import cn.sric.common.enums.LangEnums;
 import cn.sric.service.common.IListApiService;
 import cn.sric.util.*;
 import cn.sric.util.down.file.PictureFileUtil;
@@ -14,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +25,7 @@ import java.util.Map;
 @Slf4j
 public class IListApiServiceImpl implements IListApiService {
     static TAipNlp aipNlp = new TAipNlp(ConstUtil.APP_ID, ConstUtil.APP_KEY);
-    TAipSpeech client = new TAipSpeech(ConstUtil.APP_ID, ConstUtil.APP_KEY);
+    static TAipSpeech client = new TAipSpeech(ConstUtil.APP_ID, ConstUtil.APP_KEY);
 
     @Override
     public String gossip(String city) {
@@ -57,13 +52,13 @@ public class IListApiServiceImpl implements IListApiService {
             if (json.getInteger("ret") == 0) {
                 return answer;
             } else if (json.getInteger("ret") == 16394) {
-                return "false";
+                return "请求出现异常 false 返回码:{16394}";
             } else {
-                return "false";
+                return "请求时出现异常";
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return "false";
+            return e.getMessage();
         }
     }
 
