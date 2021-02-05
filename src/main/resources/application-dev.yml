@@ -33,7 +33,7 @@ mybatis-plus:
   configuration:
     #骆驼峰命名下划线
     map-underscore-to-camel-case: true
-      #打印日志输出
+    #打印日志输出
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 simbot:
@@ -58,3 +58,4 @@ logging:
 url:
   voice: /usr/sric/scc/voice/
   image: /usr/sric/scc/images/
+  music: http://localhost:3000

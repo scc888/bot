@@ -16,6 +16,12 @@ import java.time.format.DateTimeFormatter;
  **/
 @Component
 public class ConstUtil {
+
+    public static String getTimestamp(boolean isAnd) {
+        return isAnd ? "&timestamp=" + System.currentTimeMillis() : "?timestamp=" + System.currentTimeMillis();
+    }
+
+
     /**
      * 腾讯AI智能聊天秘钥
      */
@@ -137,6 +143,15 @@ public class ConstUtil {
     @Value("${url.voice}")
     public void setVoiceUrl(String url) {
         VOICE_URL = url;
+    }
+
+
+    public static String MUSIC_URL;
+
+
+    @Value("${url.music}")
+    public void setMusicUrl(String url) {
+        MUSIC_URL = url;
     }
 
 

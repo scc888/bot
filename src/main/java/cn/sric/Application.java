@@ -1,6 +1,7 @@
 package cn.sric;
 
 import cn.sric.util.param.SystemParam;
+import lombok.extern.slf4j.Slf4j;
 import love.forte.common.configuration.Configuration;
 import love.forte.simbot.annotation.SimbotApplication;
 import love.forte.simbot.bot.Bot;
@@ -11,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author sric
@@ -19,6 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SimbotApplication
 @EnableSimbot
 @MapperScan("cn.sric.dao")
+@Slf4j
 public class Application implements SimbotProcess {
 
 
@@ -37,5 +41,11 @@ public class Application implements SimbotProcess {
 
     @Override
     public void pre(@NotNull Configuration config) {
+    }
+
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

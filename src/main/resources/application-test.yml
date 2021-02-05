@@ -57,3 +57,4 @@ logging:
 url:
   voice: C:/Users/sric/Desktop/voice/
   image: C:/Users/sric/Desktop/image/
+  music: http://192.168.152.128:3000

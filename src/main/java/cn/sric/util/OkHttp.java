@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,7 +18,27 @@ public class OkHttp {
 
     public static String get(String url) {
         Request request = new Request.Builder()
-                .url(url).addHeader("application/json;", "charset=utf-8")
+                .url(url)
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            return Objects.requireNonNull(response.body()).string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String get(String url, String cookie) {
+        if (url.contains("?")) {
+            url = url + "&cookie=" + cookie;
+        } else {
+            url = url + "?cookie=" + cookie;
+        }
+
+        Request request = new Request.Builder()
+                .url(url)
                 .build();
 
         try {
@@ -28,6 +49,7 @@ public class OkHttp {
         }
         return null;
     }
+
 
     private static String post(String url, RequestBody requestBody) throws IOException {
         Request request = new Request.Builder()
