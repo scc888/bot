@@ -1,9 +1,12 @@
 package cn.sric.dao.message;
 
 import cn.sric.common.pojo.GroupMessage;
+import cn.sric.common.vo.PictureRanking;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /**
  * @author sunchuanchuan
@@ -24,4 +27,6 @@ public interface GroupMessageMapper extends BaseMapper<GroupMessage> {
     @Update("UPDATE group_message SET is_recall = 1 where msg_id=#{msgId}")
     int updateRecall(String msgId);
 
+
+    List<PictureRanking> findPictureRanKing(String groupCode);
 }

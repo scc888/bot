@@ -1,5 +1,6 @@
 package cn.sric.music.service;
 
+import cn.sric.common.pojo.ResultMessage;
 import cn.sric.music.pojo.recommend.Music;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
 public interface IMusicService {
 
 
-    List<Map<String, Object>> getRecommend(String code);
+    ResultMessage<?> getRecommend(String code);
 
 
 }

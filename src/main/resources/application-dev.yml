@@ -13,10 +13,6 @@ spring:
 
 server:
   port: 6999
-#  servlet:
-#   配置上下文
-#    context-path: /
-
 
 #配置mybatisPlus
 mybatis-plus:
@@ -33,8 +29,6 @@ mybatis-plus:
   configuration:
     #骆驼峰命名下划线
     map-underscore-to-camel-case: true
-    #打印日志输出
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 simbot:
   core:
@@ -45,8 +39,6 @@ simbot:
       protocol: ANDROID_WATCH
       use-simbot-network-log: true
       useSimbotBotLog: true
-      useSimbotNetworkLog: true
-
 
 ## springboot 日志配置.
 logging:

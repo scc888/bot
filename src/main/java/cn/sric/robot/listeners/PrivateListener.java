@@ -12,10 +12,7 @@ import cn.sric.util.param.SystemParam;
 import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import love.forte.simbot.annotation.Filter;
-import love.forte.simbot.annotation.Listener;
-import love.forte.simbot.annotation.OnPrivate;
-import love.forte.simbot.annotation.OnPrivateMsgRecall;
+import love.forte.simbot.annotation.*;
 import love.forte.simbot.api.message.events.PrivateMsg;
 import love.forte.simbot.api.message.events.PrivateMsgRecall;
 import love.forte.simbot.api.sender.MsgSender;
@@ -41,12 +38,10 @@ import java.util.concurrent.TimeUnit;
  **/
 @Component
 @Slf4j
-@Listener(priority = 2)
 public class PrivateListener {
 
     ThreadPoolExecutorUtil threadPoolExecutorUtil = new ThreadPoolExecutorUtil(2, 2, 0
             , TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.CallerRunsPolicy());
-    public static LinkedBlockingQueue<PrivateMessage> blockingQueue = new LinkedBlockingQueue<>();
 
 
     @Resource
@@ -62,11 +57,6 @@ public class PrivateListener {
     PrivateMessageMapper privateMessageMapper;
 
 
-    @OnPrivate
-    public void refreshPicture() {
-        pictureFileService.refresh();
-    }
-
     @OnPrivateMsgRecall
     public void privateMsgRecall(PrivateMsgRecall msgRecall, Sender sender) {
         String id = msgRecall.getId();
@@ -81,9 +71,8 @@ public class PrivateListener {
         privateMessageMapper.updateRecall(id);
     }
 
-
     @OnPrivate
-    @Filter(target = FilterTargets.MSG)
+    @Filters(customFilter = {"privatePrintLog"})
     public void privateMessage(PrivateMsg privateMsg, MsgSender sender) throws InterruptedException {
         Sender senderMsg = sender.SENDER;
         String msg = privateMsg.getMsg();
@@ -132,9 +121,7 @@ public class PrivateListener {
             sender.SENDER.sendPrivateMsg(privateMsg, ret);
         } else {
             String gossip = iListApiService.gossip(msg);
-            if (!gossip.contains("呵呵")) {
-                sender.SENDER.sendPrivateMsg(privateMsg, gossip);
-            }
+            sender.SENDER.sendPrivateMsg(privateMsg, gossip);
         }
 
         PrivateMessage privateMessage = new PrivateMessage();
@@ -145,9 +132,5 @@ public class PrivateListener {
                 .setQqCode(privateMsg.getAccountInfo().getAccountCode()).setMsgId(privateMsg.getId())
                 .setRecipient(SystemParam.strCurrentQQ);
         privateMessageMapper.insert(privateMessage);
-    }
-
-
-    public static void main(String[] args) {
     }
 }

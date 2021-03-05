@@ -1,6 +1,7 @@
 package cn.sric.util;
 
 
+import org.apache.commons.lang.reflect.MethodUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -16,12 +17,6 @@ import java.time.format.DateTimeFormatter;
  **/
 @Component
 public class ConstUtil {
-
-    public static String getTimestamp(boolean isAnd) {
-        return isAnd ? "&timestamp=" + System.currentTimeMillis() : "?timestamp=" + System.currentTimeMillis();
-    }
-
-
     /**
      * 腾讯AI智能聊天秘钥
      */
@@ -34,7 +29,6 @@ public class ConstUtil {
     /**
      * 时间格式
      */
-
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 
@@ -171,6 +165,7 @@ public class ConstUtil {
 
     public static String BANNED = "领取套餐";
     public static String PICTURE = "来点图片";
+    public static String SE_TU = "来点涩图";
     public static String BAI_DU = "百度";
     public static String REVIEW = "网易云热评";
     public static String QR = "获取二维码";
@@ -179,4 +174,7 @@ public class ConstUtil {
     public static String LIKE = "like";
     public static String TU_LAI = "图来";
 
+
+    //用来判断定时任务是否开启
+    public static boolean IS_TASK = false;
 }

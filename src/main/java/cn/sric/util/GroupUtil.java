@@ -1,10 +1,7 @@
 package cn.sric.util;
 
 import cn.sric.util.param.SystemParam;
-import love.forte.simbot.api.message.results.AuthInfo;
-import love.forte.simbot.api.message.results.GroupAdmin;
-import love.forte.simbot.api.message.results.GroupFullInfo;
-import love.forte.simbot.api.message.results.SimpleGroupInfo;
+import love.forte.simbot.api.message.results.*;
 import love.forte.simbot.api.sender.Sender;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -32,9 +29,15 @@ public class GroupUtil {
         List<GroupAdmin> admins = groupInfo.getAdmins();
         List<String> list = new ArrayList<>();
         admins.forEach(admin -> {
-            list.add(admin.getAccountInfo().getAccountCode());
+            list.add(admin.getAccountCode());
         });
         return list;
+    }
+
+
+    public static boolean isAdmin(String qqGroup, String qq) {
+        GroupMemberInfo memberInfo = SystemParam.msgSender.GETTER.getMemberInfo(qqGroup, qq);
+        return memberInfo.getPermission().isOwnerOrAdmin();
     }
 
 

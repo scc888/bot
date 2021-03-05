@@ -32,7 +32,7 @@ public class NetWorkFile {
         try {
             response = new OkHttpClient().newCall(req).execute();
             if (!response.isSuccessful()) {
-                log.error("【调用HTTP请求异常】 code:{},message:{},url:{}", response.code(), response.message(),url);
+                log.error("【调用HTTP请求异常】 code:{},message:{},url:{}", response.code(), response.message(), url);
                 return null;
             }
             inputStream = Objects.requireNonNull(response.body()).byteStream();

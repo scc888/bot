@@ -25,7 +25,6 @@ public class PictureFileUtil {
     public static String download(String url) {
         //下载的时候先判断本地是否存在这个文件，如果存在直接return 本地路径，否则再下载，然后返回路径
         String substringUrl = url.substring(url.lastIndexOf("/") + 1);
-        // 服务器地址
         String imgUrl = (ConstUtil.FILE_URL + substringUrl);
         File file = new File(imgUrl);
         if (file.isFile()) {
@@ -95,9 +94,6 @@ public class PictureFileUtil {
         }
         return "";
     }
-
-
-
 
 
 }

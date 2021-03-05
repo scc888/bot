@@ -171,6 +171,6 @@ public class SnowFlakeUtil {
 
 
     public static void main(String[] args) {
-        System.out.println(nextId());
+        String id = nextId();
     }
 }

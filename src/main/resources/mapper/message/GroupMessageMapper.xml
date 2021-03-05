@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sric.dao.message.GroupMessageMapper">
+    <select id="findPictureRanKing" resultMap="PictureRanking">
+SELECT
+	qq_code,
+COUNT(message) num
+FROM
+	group_message
+WHERE
+	group_code = #{groupCode}
+	AND ( message = "图来" OR message = "来点图片" OR message = "来点涩图")
+	AND DATE_FORMAT(time,'%Y-%m-%d') = date_format(now(), '%Y-%m-%d')
+GROUP BY  qq_code
+    </select>
+</mapper>

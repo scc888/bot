@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <simbot.version>2.0.0-BETA.8</simbot.version>
+        <simbot.version>2.0.1</simbot.version>
     </properties>
 
     <dependencyManagement>
@@ -30,6 +30,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 
 
     <dependencies>

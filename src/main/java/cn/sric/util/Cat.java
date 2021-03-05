@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import love.forte.catcode.CatCodeUtil;
-import love.forte.catcode.CodeTemplate;
-import love.forte.catcode.MutableNeko;
-import love.forte.catcode.Neko;
+import catcode.CatCodeUtil;
+import catcode.CodeTemplate;
+import catcode.MutableNeko;
+import catcode.Neko;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,18 +23,19 @@ import java.util.stream.Collectors;
  **/
 @Slf4j
 public class Cat {
+    public static final Map<String, String[]> CONTEXT = new HashMap<>();
     public static final CatCodeUtil UTILS = CatCodeUtil.getInstance();
     final static CodeTemplate<String> STRING_TEMPLATE = UTILS.getStringTemplate();
     final static CodeTemplate<Neko> NEKO_TEMPLATE = UTILS.getNekoTemplate();
 
     public static String at(String qq) {
-        String at = STRING_TEMPLATE.at(qq);
+        String at = STRING_TEMPLATE.at(qq) + " ";
         return at;
     }
 
 
     public static String atAll() {
-        String at = STRING_TEMPLATE.atAll();
+        String at = STRING_TEMPLATE.atAll() + " ";
         return at;
     }
 
@@ -71,10 +72,6 @@ public class Cat {
     }
 
     public static String getMusic1(String id) {
-
-//        STRING_TEMPLATE.music()
-
-
         Map<String, String> map = new HashMap<>();
         map.put("type", "qq");
         map.put("id", id);

@@ -56,10 +56,9 @@ public class AdminServiceImpl implements AdminService {
                 }
                 return;
             }
-            boolean meIsAdmin = isAdmin(groupId, SystemParam.strCurrentQQ);
+            boolean meIsAdmin = meIsAdmin(groupId, SystemParam.strCurrentQQ);
             if (!meIsAdmin) {
                 sender.SENDER.sendGroupMsg(groupId, Cat.at(qqCode) + "我的当前的权限还不能禁言 (T.T)");
-
                 return;
             }
             String result = msg.substring(msg.indexOf("餐") + 1).trim();
@@ -150,8 +149,8 @@ public class AdminServiceImpl implements AdminService {
         return flag;
     }
 
-    private boolean meIsAdmin(String groupQQ) {
-        return false;
+    private boolean meIsAdmin(String groupQQ, String qq) {
+        return GroupUtil.isAdmin(groupQQ, qq);
     }
 
 
@@ -165,6 +164,6 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public static void main(String[] args) throws ScriptException {
-        System.out.println(eval("19*100"));
+        System.out.println(Long.parseLong(eval("undefined").toString()));
     }
 }

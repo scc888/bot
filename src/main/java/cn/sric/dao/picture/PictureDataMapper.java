@@ -1,6 +1,7 @@
 package cn.sric.dao.picture;
 
 import cn.sric.common.pojo.PictureData;
+import cn.sric.common.vo.PictureRanking;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -47,5 +48,8 @@ public interface PictureDataMapper extends BaseMapper<PictureData> {
      */
     @Update("UPDATE picture_data SET local_url=#{localUrl} WHERE id=#{id}")
     int updateLocalUrlById(@Param("id") long id, @Param("localUrl") String localUrl);
+
+
+
 
 }

@@ -5,6 +5,7 @@ import cn.sric.music.pojo.Profile;
 import cn.sric.music.service.ILoginService;
 import cn.sric.music.util.RedisKeyUtil;
 import cn.sric.util.ConstUtil;
+import cn.sric.util.MethodUtil;
 import cn.sric.util.OkHttp;
 import cn.sric.util.RedisUtil;
 import com.alibaba.fastjson.JSON;
@@ -32,7 +33,7 @@ public class LoginServiceImpl implements ILoginService {
     @Override
     public ResultMessage<String> cellphone(String phone, String passWord) {
         ResultMessage<String> resultMessage = new ResultMessage<>();
-        String rest = OkHttp.get(ConstUtil.MUSIC_URL + "/login/cellphone?phone=" + phone + "&password=" + passWord + ConstUtil.getTimestamp(true));
+        String rest = OkHttp.get(ConstUtil.MUSIC_URL + "/login/cellphone?phone=" + phone + "&password=" + passWord + MethodUtil.getTimestamp(true));
         JSONObject jsonObject = JSON.parseObject(rest);
         Integer code = jsonObject.getInteger("code");
         if (code != 200) {
@@ -43,7 +44,7 @@ public class LoginServiceImpl implements ILoginService {
 
     @Override
     public boolean getCaptcha(String phone) {
-        JSONObject rest = JSON.parseObject(OkHttp.get(ConstUtil.MUSIC_URL + "/captcha/sent?phone=" + phone + ConstUtil.getTimestamp(true)));
+        JSONObject rest = JSON.parseObject(OkHttp.get(ConstUtil.MUSIC_URL + "/captcha/sent?phone=" + phone + MethodUtil.getTimestamp(true)));
         Integer code = rest.getInteger("code");
         if (code == 200) {
             return true;
@@ -86,7 +87,7 @@ public class LoginServiceImpl implements ILoginService {
 
     @Override
     public ResultMessage<String> logout(String code) {
-        String rest = OkHttp.get(ConstUtil.MUSIC_URL + "/logout" + ConstUtil.getTimestamp(false));
+        String rest = OkHttp.get(ConstUtil.MUSIC_URL + "/logout" + MethodUtil.getTimestamp(false));
         if (JSON.parseObject(rest).getInteger("code").equals(200)) {
             String phone = redisUtil.get(RedisKeyUtil.getPhone(code));
             redisUtil.del(RedisKeyUtil.getCookie(code, phone));

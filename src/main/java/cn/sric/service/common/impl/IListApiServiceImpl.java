@@ -66,7 +66,7 @@ public class IListApiServiceImpl implements IListApiService {
     public Map<String, String> review() {
         Map<String, String> map = new HashMap<>();
         String run;
-        run = OkHttp.get(ConstUtil.REVIEW);
+        run = OkHttp.get(ConstUtil.REVIEW_URL);
         JSONObject jsonObject = JSONObject.parseObject(run);
         String name = jsonObject.getString("name");
         String artistsName = jsonObject.getString("artists_name");
