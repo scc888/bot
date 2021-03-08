@@ -46,67 +46,77 @@ public class AdminServiceImpl implements AdminService {
         String message = "";
 
         boolean isMatch = Pattern.matches(patter, groupMsg.getMsg());
-        if (isMatch) {
-            Boolean isAdmin = GroupUtil.isAdmin(groupId, qqCode);
-            if (isAdmin) {
-                if (RandomUtil.randomInt(0, 100) == 6) {
-                    sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + "管理员领你" + Cat.emoji(128052) + "套餐呢¿");
-                } else {
-                    sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + "你能不能领取套餐你心里没点13数嘛？哼~");
+        try {
+            if (isMatch) {
+                Boolean isAdmin = GroupUtil.isAdmin(groupId, qqCode);
+                if (isAdmin) {
+                    if (RandomUtil.randomInt(0, 100) == 6) {
+                        sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + "管理员领你" + Cat.emoji(128052) + "套餐呢¿");
+                    } else {
+                        sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + "你能不能领取套餐你心里没点13数嘛？哼~");
+                    }
+                    return;
                 }
-                return;
-            }
-            boolean meIsAdmin = meIsAdmin(groupId, SystemParam.strCurrentQQ);
-            if (!meIsAdmin) {
-                sender.SENDER.sendGroupMsg(groupId, Cat.at(qqCode) + "我的当前的权限还不能禁言 (T.T)");
-                return;
-            }
-            String result = msg.substring(msg.indexOf("餐") + 1).trim();
-            if (result.length() == 0) {
-                duration = ran;
-                message = "想冷静又不知道冷静多久？那就大发慈悲的赏你" + duration + "分钟吧 不要谢谢我哟~";
-                sender.SETTER.setGroupBan(groupId, qqCode, duration * 60);
-                sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + message);
-                return;
-            }
-            //判断领取套餐后的内容是否为数字或者带小数点的数字
-            if (IsNumberUtil.isInteger(result) || IsNumberUtil.isDouble(result)) {
-                double num = Double.parseDouble(result);
-                if (num < 1) {
-                    duration = 1;
-                    message = "别这么小气，都不大于1呢，我就大发慈悲给你凑个整好啦!";
-                } else {
-                    duration = (int) num;
-                    message = bannedTime(duration);
+                boolean meIsAdmin = meIsAdmin(groupId, SystemParam.strCurrentQQ);
+                if (!meIsAdmin) {
+                    sender.SENDER.sendGroupMsg(groupId, Cat.at(qqCode) + "我的当前的权限还不能禁言 (T.T)");
+                    return;
                 }
-            } else {
-                //匹配包含数字和运算符的内容，否则机器人无法看懂
-                if (Pattern.matches(chinese, result)) {
-                    //防止只有运算符而没有数字的运算，或者多个运算符 例如：1+++++1 等
-                    try {
-                        // 计算方法
-                        duration = Long.parseLong(eval(result).toString());
-                        if (duration < 0) {
-                            duration = Math.abs(duration);
-                            message = "-" + duration + "？" + "负数？那怎么行呢？已经为您贴心的转为正数了呢~";
-                        } else if (duration == 0) {
-                            duration = ran;
-                            message = "0？这可不行呢！就随便赏你" + duration + "分钟吧";
-                        } else {
-                            message = bannedTime(duration);
+                String result = msg.substring(msg.indexOf("餐") + 1).trim();
+                if (result.length() == 0) {
+                    duration = ran;
+                    message = "想冷静又不知道冷静多久？那就大发慈悲的赏你" + duration + "分钟吧 不要谢谢我哟~";
+                    sender.SETTER.setGroupBan(groupId, qqCode, duration * 60);
+                    sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + message);
+                    return;
+                }
+                //判断领取套餐后的内容是否为数字或者带小数点的数字
+                if (IsNumberUtil.isInteger(result) || IsNumberUtil.isDouble(result)) {
+                    double num = Double.parseDouble(result);
+                    if (num < 1) {
+                        duration = 1;
+                        message = "别这么小气，都不大于1呢，我就大发慈悲给你凑个整好啦!";
+                    } else {
+                        duration = (int) num;
+                        if (duration > 30 * (24 * 60)) {
+                            duration = 30 * (24 * 60);
                         }
-                    } catch (Exception e) {
+                        message = bannedTime(duration);
+                    }
+                } else {
+                    //匹配包含数字和运算符的内容，否则机器人无法看懂
+                    if (Pattern.matches(chinese, result)) {
+                        //防止只有运算符而没有数字的运算，或者多个运算符 例如：1+++++1 等
+                        try {
+                            // 计算方法
+                            duration = Long.parseLong(eval(result).toString());
+                            if (duration < 0) {
+                                duration = Math.abs(duration);
+                                message = "-" + duration + "？" + "负数？那怎么行呢？已经为您贴心的转为正数了呢~";
+                            } else if (duration == 0) {
+                                duration = ran;
+                                message = "0？这可不行呢！就随便赏你" + duration + "分钟吧";
+                            } else {
+                                message = bannedTime(duration);
+                            }
+                        } catch (Exception e) {
+                            duration = ran;
+                            message = "完全看不懂你在说什么呢？就让你去小黑屋待会儿吧~ 嘻嘻";
+                        }
+                    } else {
                         duration = ran;
                         message = "完全看不懂你在说什么呢？就让你去小黑屋待会儿吧~ 嘻嘻";
                     }
-                } else {
-                    duration = ran;
-                    message = "完全看不懂你在说什么呢？就让你去小黑屋待会儿吧~ 嘻嘻";
                 }
+                sender.SETTER.setGroupBan(groupId, qqCode, duration * 60);
+                sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + message);
             }
+        } catch (Exception e) {
+            duration = ran;
+            message = "完全看不懂你在说什么呢？就让你去小黑屋待会儿吧~ 嘻嘻";
+            sender.SETTER.setGroupBan(groupId, qqCode, duration * 60);
+            sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + message);
         }
-        sender.SETTER.setGroupBan(groupId, qqCode, duration * 60);
-        sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + message);
     }
 
     @Override

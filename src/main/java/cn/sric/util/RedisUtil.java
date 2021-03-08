@@ -127,6 +127,23 @@ public class RedisUtil {
         return fl;
     }
 
+
+
+    /**
+     * 从redis中获取key对应的过期时间;
+     * 如果该值有过期时间，就返回相应的过期时间;
+     * 如果该值没有设置过期时间，就返回-1;
+     * 如果没有该值，就返回-2;
+     * @param key
+     * @return
+     */
+    public long expire(String key) {
+        return stringRedisTemplate.opsForValue().getOperations().getExpire(key);
+    }
+
+
+
+
     public static void main(String[] args) {
         Calendar ca = Calendar.getInstance();
         //失效的时间
