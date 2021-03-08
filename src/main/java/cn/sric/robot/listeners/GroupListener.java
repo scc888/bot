@@ -78,6 +78,11 @@ public class GroupListener {
             sender.SENDER.sendPrivateMsg(qq, map.get("music"));
         } else if (msg.startsWith(ConstUtil.PICTURE) || msg.startsWith(ConstUtil.TU_LAI) || msg.startsWith(ConstUtil.SE_TU)) {
             threadPoolExecutorUtil.execute(() -> {
+                String s = redisUtil.get("sepi" + qq);
+                if (!StringUtils.isEmpty(s)) {
+                    sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qq) + "老色批爪巴");
+                    return;
+                }
                 String trgs = null;
                 if (msg.contains(ConstUtil.LIKE)) {
                     trgs = msg.substring(msg.indexOf(ConstUtil.LIKE) + 4);
@@ -89,6 +94,7 @@ public class GroupListener {
                 int i = RandomUtil.randomInt(1, 100);
                 if (i == 50) {
                     sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qq) + "老色批爪巴");
+                    redisUtil.set("sepi" + qq, "停止刷图5分钟", 300, TimeUnit.SECONDS);
                 } else {
                     String url = pictureFileService.randomFind(fal, trgs);
                     sender.SENDER.sendGroupMsg(groupMsg, Cat.getImage(url));
@@ -101,7 +107,6 @@ public class GroupListener {
         } else if (msg.startsWith(ConstUtil.MUSIC_TEST)) {
             String music = Cat.getMusic(msg.substring(msg.indexOf("歌") + 1));
             sender.SENDER.sendGroupMsg(groupMsg, music);
-
         } else if (msg.startsWith(ConstUtil.BAI_DU)) {
             String s = iListApiService.letMeBaiDu(msg);
             sender.SENDER.sendGroupMsg(groupMsg, s);

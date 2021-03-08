@@ -1,9 +1,6 @@
 package cn.sric.robot.filter;
 
 import cn.sric.util.ConstUtil;
-import love.forte.simbot.api.message.containers.GroupContainer;
-import love.forte.simbot.api.message.containers.GroupInfo;
-import love.forte.simbot.api.message.events.MsgGet;
 import love.forte.simbot.filter.FilterData;
 import love.forte.simbot.filter.ListenerFilter;
 import org.jetbrains.annotations.NotNull;

@@ -8,6 +8,7 @@ import cn.sric.service.file.IPictureFileService;
 import cn.sric.service.picture.IPictureDataService;
 import cn.sric.util.Cat;
 import cn.sric.util.ConstUtil;
+import cn.sric.util.RedisUtil;
 import cn.sric.util.param.SystemParam;
 import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -49,6 +50,8 @@ public class PrivateListener {
 
     @Resource
     IListApiService iListApiService;
+
+
 
 
     @Resource

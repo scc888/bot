@@ -138,7 +138,7 @@ public class PictureFileServiceImpl implements IPictureFileService {
         String url = randomFind(1, is8, like).get(0);
         while (true) {
             if (url.equals(ConstUtil.XXX)) {
-                randomFind(is8, like);
+                randomFind(is8, null);
             } else {
                 break;
             }

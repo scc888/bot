@@ -47,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
 
         boolean isMatch = Pattern.matches(patter, groupMsg.getMsg());
         if (isMatch) {
-            Boolean isAdmin = this.isAdmin(groupId, qqCode);
+            Boolean isAdmin = GroupUtil.isAdmin(groupId, qqCode);
             if (isAdmin) {
                 if (RandomUtil.randomInt(0, 100) == 6) {
                     sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qqCode) + "管理员领你" + Cat.emoji(128052) + "套餐呢¿");
