@@ -163,16 +163,16 @@ public class ConstUtil {
     public static final String XXX = "xxx";
 
 
-    public static String BANNED = "领取套餐";
-    public static String PICTURE = "来点图片";
-    public static String SE_TU = "来点涩图";
-    public static String BAI_DU = "百度";
-    public static String REVIEW = "网易云热评";
-    public static String QR = "获取二维码";
-    public static String MUSIC_TEST = "点歌";
-    public static String FAN_YI = "翻译";
-    public static String LIKE = "like";
-    public static String TU_LAI = "图来";
+    public final static String BANNED = "领取套餐";
+    public final static String PICTURE = "来点图片";
+    public final static String SE_TU = "来点涩图";
+    public final static String BAI_DU = "百度";
+    public final static String REVIEW = "网易云热评";
+    public final static String QR = "获取二维码";
+    public final static String MUSIC_TEST = "点歌";
+    public final static String FAN_YI = "翻译";
+    public final static String LIKE = "like";
+    public final static String TU_LAI = "图来";
 
 
     //用来判断定时任务是否开启

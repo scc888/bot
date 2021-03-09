@@ -10,7 +10,6 @@ import cn.sric.util.Cat;
 import cn.sric.util.ConstUtil;
 import cn.sric.util.RedisUtil;
 import cn.sric.util.TApiUtil;
-import cn.sric.util.param.SystemParam;
 import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +21,13 @@ import love.forte.simbot.api.message.events.GroupMsg;
 import love.forte.simbot.api.message.events.GroupMsgRecall;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.api.sender.Sender;
+import love.forte.simbot.filter.MatchType;
+import love.forte.simbot.filter.MostMatchType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -63,54 +63,81 @@ public class GroupListener {
     RedisUtil redisUtil;
 
     @OnGroup()
-    @Filters(customFilter = {"groupPrintLog"})
-    public void groupMessage(GroupMsg groupMsg, MsgSender sender) {
+    @Filters(customFilter = {"picture", "groupPrintLog"}, customMostMatchType = MostMatchType.ALL)
+    public void groupPicture(GroupMsg groupMsg, MsgSender sender) {
         String qq = groupMsg.getAccountInfo().getAccountCode();
         String msg = groupMsg.getMsg();
-        if (msg.contains(ConstUtil.BANNED)) {
-            adminService.getThePackage(groupMsg, sender);
-        } else if (msg.startsWith(ConstUtil.FAN_YI)) {
-            String translate = iListApiService.translate(msg);
-            sender.SENDER.sendGroupMsg(groupMsg, translate);
-        } else if (msg.equals(ConstUtil.REVIEW)) {
-            Map<String, String> map = iListApiService.review();
-            sender.SENDER.sendGroupMsg(groupMsg, map.get("review"));
-            sender.SENDER.sendPrivateMsg(qq, map.get("music"));
-        } else if (msg.startsWith(ConstUtil.PICTURE) || msg.startsWith(ConstUtil.TU_LAI) || msg.startsWith(ConstUtil.SE_TU)) {
-            threadPoolExecutorUtil.execute(() -> {
-                String s = redisUtil.get("sepi" + qq);
-                if (!StringUtils.isEmpty(s)) {
-                    sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qq) + "老色批爪巴");
-                    return;
-                }
-                String trgs = null;
-                if (msg.contains(ConstUtil.LIKE)) {
-                    trgs = msg.substring(msg.indexOf(ConstUtil.LIKE) + 4);
-                }
-                boolean fal = false;
-                if (msg.equals(ConstUtil.SE_TU)) {
-                    fal = true;
-                }
-                int i = RandomUtil.randomInt(1, 100);
-                if (i == 50) {
-                    sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qq) + "老色批爪巴");
-                    redisUtil.set("sepi" + qq, "停止刷图5分钟", 300, TimeUnit.SECONDS);
-                } else {
-                    String url = pictureFileService.randomFind(fal, trgs);
-                    sender.SENDER.sendGroupMsg(groupMsg, Cat.getImage(url));
-                }
-            });
-        } else if (msg.startsWith(ConstUtil.QR)) {
-            String file = iListApiService.findQr(msg);
-            String image = Cat.getImage(file);
-            sender.SENDER.sendGroupMsg(groupMsg, image);
-        } else if (msg.startsWith(ConstUtil.MUSIC_TEST)) {
-            String music = Cat.getMusic(msg.substring(msg.indexOf("歌") + 1));
-            sender.SENDER.sendGroupMsg(groupMsg, music);
-        } else if (msg.startsWith(ConstUtil.BAI_DU)) {
-            String s = iListApiService.letMeBaiDu(msg);
-            sender.SENDER.sendGroupMsg(groupMsg, s);
-        }
+        threadPoolExecutorUtil.execute(() -> {
+            String s = redisUtil.get("picture" + qq);
+            if (!StringUtils.isEmpty(s)) {
+                sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qq) + "老色批爪巴");
+                return;
+            }
+            String trgs = null;
+            if (msg.contains(ConstUtil.LIKE)) {
+                trgs = msg.substring(msg.indexOf(ConstUtil.LIKE) + 4);
+            }
+            boolean fal = false;
+            if (msg.equals(ConstUtil.SE_TU)) {
+                fal = true;
+            }
+            int i = RandomUtil.randomInt(1, 100);
+            if (i == 50) {
+                sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qq) + "老色批爪巴");
+                redisUtil.set("picture" + qq, "停止刷图5分钟", 300, TimeUnit.SECONDS);
+            } else {
+                String url = pictureFileService.randomFind(fal, trgs);
+                sender.SENDER.sendGroupMsg(groupMsg, Cat.getImage(url));
+            }
+        });
+    }
+
+
+    @OnGroup()
+    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.REVIEW, matchType = MatchType.STARTS_WITH))
+    public void review(GroupMsg groupMsg, MsgSender sender) {
+        String qq = groupMsg.getAccountInfo().getAccountCode();
+        Map<String, String> map = iListApiService.review();
+        sender.SENDER.sendGroupMsg(groupMsg, map.get("review"));
+        sender.SENDER.sendPrivateMsg(qq, map.get("music"));
+    }
+
+    @OnGroup()
+    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.BANNED, matchType = MatchType.STARTS_WITH))
+    public void banNed(GroupMsg groupMsg, MsgSender sender) {
+        adminService.getThePackage(groupMsg, sender);
+    }
+
+    @OnGroup()
+    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.FAN_YI, matchType = MatchType.STARTS_WITH))
+    public void fanYi(GroupMsg groupMsg, MsgSender sender) {
+        String translate = iListApiService.translate(groupMsg.getMsg());
+        sender.SENDER.sendGroupMsg(groupMsg, translate);
+    }
+
+    @OnGroup()
+    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.QR, matchType = MatchType.STARTS_WITH))
+    public void qr(GroupMsg groupMsg, MsgSender sender) {
+        String msg = groupMsg.getMsg();
+        String file = iListApiService.findQr(msg);
+        String image = Cat.getImage(file);
+        sender.SENDER.sendGroupMsg(groupMsg, image + "\n");
+    }
+
+    @OnGroup()
+    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.MUSIC_TEST, matchType = MatchType.STARTS_WITH))
+    public void musicTest(GroupMsg groupMsg, MsgSender sender) {
+        String msg = groupMsg.getMsg();
+        String music = Cat.getMusic(msg.substring(msg.indexOf("歌") + 1));
+        sender.SENDER.sendGroupMsg(groupMsg, music);
+    }
+
+    @OnGroup()
+    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.BAI_DU, matchType = MatchType.STARTS_WITH))
+    public void baiDu(GroupMsg groupMsg, MsgSender sender) {
+        String msg = groupMsg.getMsg();
+        String s = iListApiService.letMeBaiDu(msg);
+        sender.SENDER.sendGroupMsg(groupMsg, s);
     }
 
 

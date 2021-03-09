@@ -7,6 +7,7 @@ import love.forte.simbot.annotation.Filters;
 import love.forte.simbot.api.message.events.PrivateMsg;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.filter.MatchType;
+import love.forte.simbot.filter.MostMatchType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AdminListener {
 
-    @Filters(value = {@Filter(value = "定时任务", matchType = MatchType.ENDS_WITH)}, customFilter = {"isItMe", "privatePrintLog"})
+    @Filters(value = {@Filter(value = "定时任务", matchType = MatchType.ENDS_WITH)}, customFilter = {"isItMe", "privatePrintLog"},customMostMatchType = MostMatchType.ALL)
     public void turnOnOrOff(PrivateMsg privateMsg, MsgSender sender) {
         String msg = privateMsg.getMsg();
         if ("开启定时任务".equals(msg)) {
