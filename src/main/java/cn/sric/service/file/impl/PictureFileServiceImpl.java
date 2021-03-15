@@ -9,16 +9,25 @@ import cn.sric.util.ConstUtil;
 import cn.sric.util.OkHttp;
 import cn.sric.util.down.file.PictureFileUtil;
 import cn.sric.util.param.SystemParam;
+import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import love.forte.simbot.api.sender.Sender;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author sunchuanchuan
@@ -45,20 +54,6 @@ public class PictureFileServiceImpl implements IPictureFileService {
         return astringentGraph(1);
     }
 
-    @Override
-    public List<PictureData> saveAstringent(int num) {
-        String run = OkHttp.get(ConstUtil.SET_URL + "&num=" + num);
-        PictureDto pictureDto = JSON.parseObject(run, PictureDto.class);
-        if (pictureDto != null) {
-            List<PictureData> data = data(pictureDto);
-            data.forEach(pictureData -> {
-                pictureData.setLocalUrl(ConstUtil.XXX);
-                iPictureDataService.savePictureData(pictureData);
-            });
-            return data;
-        }
-        return null;
-    }
 
     private List<PictureData> data(PictureDto pictureDto) {
         List<PictureData> pictureDataList = null;
@@ -73,7 +68,6 @@ public class PictureFileServiceImpl implements IPictureFileService {
         }
         return pictureDataList;
     }
-
 
     @Override
     public List<String> downloadPicture(int num) {
@@ -95,7 +89,14 @@ public class PictureFileServiceImpl implements IPictureFileService {
                     SystemParam.msgSender.SENDER.sendPrivateMsg(ConstUtil.QQ_CODE, "下载图片时出现错误 \n时间:" + LocalDateTime.now().format(ConstUtil.DATE_TIME_FORMATTER));
                     log.error("下载图片时出现错误 \n时间:" + LocalDateTime.now().format(ConstUtil.DATE_TIME_FORMATTER));
                 }
-                pictureData.setLocalUrl(StringUtils.isEmpty(download) ? "xxx" : download);
+                if (StringUtils.isEmpty(download)) {
+                    pictureData.setLocalUrl("xxx").setFileSize(0L);
+                } else {
+                    pictureData.setLocalUrl(download);
+                    File file = new File(download);
+                    long l = file.length() / 1024;
+                    pictureData.setLocalUrl(download).setFileSize(l);
+                }
                 retString.add(download);
                 try {
                     iPictureDataService.savePictureData(pictureData);
@@ -148,8 +149,56 @@ public class PictureFileServiceImpl implements IPictureFileService {
 
     @Override
     public void refresh() {
+        long start = System.currentTimeMillis();
+        ThreadPoolExecutorUtil executorService = new ThreadPoolExecutorUtil(3, 3,
+                0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.CallerRunsPolicy());
+        int size = 10;
+        int count = iPictureDataService.findPictureCount(false);
+        int num = count % size > 0 ? count / size + 1 : count / size;
+        for (int i = 1; i <= num; i++) {
+            List<PictureData> records = iPictureDataService.pageFind(i, size, null);
+            for (PictureData record : records) {
+                executorService.execute(() -> {
+                    String download = PictureFileUtil.download(record.getUrl());
+                    File file = new File(download);
+                    long l = file.length() / 1024;
+                    record.setLocalUrl(download).setFileSize(l);
+                    iPictureDataService.savePictureData(record);
+                });
+            }
+        }
 
+        Sender sender = SystemParam.msgSender.SENDER;
+        sender.sendPrivateMsg(ConstUtil.QQ_CODE, "总共要更新" + num + "条数据");
 
+        while (true) {
+            try {
+                TimeUnit.SECONDS.sleep(300);
+            } catch (InterruptedException e) {
+                log.error("刷新本地图片暂停出现异常");
+            }
+            //获取队列中的信息
+            BlockingQueue<Runnable> queue = executorService.getQueue();
+            //活动的线程的数量，也就是线程池在运行的最大数量
+            int activeCount = executorService.getActiveCount();
+
+            sender.sendPrivateMsg(ConstUtil.QQ_CODE, "大概还剩余   [" + queue.size() + "]   条数据要更新");
+
+            if (queue.isEmpty() && activeCount == 0) {
+                long end = System.currentTimeMillis();
+                sender.sendPrivateMsg(ConstUtil.QQ_CODE, "更新完啦大概用了---->>>" + ((end - start) / 1000) + "秒");
+                executorService.shutdown();
+                break;
+            }
+        }
     }
 
+    public static void main(String[] args) throws InterruptedException {
+
+        String url = "C:\\Users\\sric\\Desktop\\image\\123123.png";
+        File file = new File(url);
+        System.out.println(Math.round(file.length()));
+        System.out.println((file.length() / 1024));
+
+    }
 }

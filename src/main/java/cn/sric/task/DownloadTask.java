@@ -44,10 +44,8 @@ public class DownloadTask {
 
     public static Integer a = 0;
 
-    @Scheduled(cron = "0 40 16 * * * ")
+    @Scheduled(cron = "0 0 4 ? 1-12 2,5,7 ")
     public void task() throws InterruptedException {
-        taskExecutorService.allowCoreThreadTimeOut(true);
-
         if (!ConstUtil.IS_TASK) {
             log.info("定时任务被关闭");
             return;
@@ -63,7 +61,6 @@ public class DownloadTask {
             taskExecutorService.execute(() -> {
                 System.out.println("线程" + Thread.currentThread().getName() + "正在运行第:" + ++a + "次");
                 pictureFileService.downloadPicture(10);
-                // pictureFileService.saveAstringent(10);
             });
         }
         while (true) {

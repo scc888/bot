@@ -30,14 +30,6 @@ public interface IPictureFileService {
      */
     PictureDto astringentGraph();
 
-    /**
-     * 去网络查询图片信息
-     *
-     * @param num 一次查询的数量 最多10条
-     * @return
-     */
-    List<PictureData> saveAstringent(int num);
-
 
     /**
      * 下载图片
@@ -62,7 +54,7 @@ public interface IPictureFileService {
      * @param is8
      * @return
      */
-    List<String> randomFind(int num, boolean is8,String like);
+    List<String> randomFind(int num, boolean is8, String like);
 
 
     /**
@@ -71,8 +63,11 @@ public interface IPictureFileService {
      * @param is8
      * @return
      */
-    String randomFind(boolean is8,String like);
+    String randomFind(boolean is8, String like);
 
 
+    /**
+     * 刷新本地图片
+     */
     void refresh();
 }

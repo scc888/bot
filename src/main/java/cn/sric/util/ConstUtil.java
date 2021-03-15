@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.xml.stream.events.StartDocument;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -106,6 +107,11 @@ public class ConstUtil {
         return stringBuffer.toString();
     }
 
+    public static String CONVERSION_URL(String url) {
+        return "http://api.k780.com/?app=shorturl.set&url=" + url + "&appkey=51394&sign=c969d36d75849a6be992b2519ab0f672&format=json";
+    }
+
+
     /**
      * 百度
      */
@@ -176,5 +182,5 @@ public class ConstUtil {
 
 
     //用来判断定时任务是否开启
-    public static boolean IS_TASK = false;
+    public static boolean IS_TASK = true;
 }

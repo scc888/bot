@@ -5,6 +5,8 @@ import cn.sric.dao.picture.PictureDataMapper;
 import cn.sric.service.picture.IPictureDataService;
 import cn.sric.util.ConstUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -56,5 +58,11 @@ public class PictureDataServiceImpl implements IPictureDataService {
     public List<PictureData> randomFind(int num, boolean is8, String like) {
         List<PictureData> pictureDataList = pictureDataMapper.randomFind(num, is8 ? 1 : 0, like);
         return pictureDataList;
+    }
+
+    @Override
+    public List<PictureData> pageFind(int current, int size, QueryWrapper<PictureData> queryWrapper) {
+        Page<PictureData> pictureDataPage = new Page<>(current, size);
+        return pictureDataMapper.selectPage(pictureDataPage, queryWrapper).getRecords();
     }
 }

@@ -1,11 +1,11 @@
 package cn.sric.robot.filter;
 
-import love.forte.catcode.Neko;
 import love.forte.simbot.api.message.events.GroupMsg;
 import love.forte.simbot.api.message.events.MsgGet;
 import love.forte.simbot.filter.FilterData;
 import love.forte.simbot.filter.ListenerFilter;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,11 +15,13 @@ import java.util.List;
 public class PictureFilter {
 
     @Component("picture")
+    @Async
     public static class Picture implements ListenerFilter {
         @Override
         public boolean test(@NotNull FilterData data) {
             List<String> list = new ArrayList<>();
             list.add("图来");
+            list.add("来点图片");
             list.add("r18色图");
             list.add("r18涩图");
             list.add("来点r18色图");

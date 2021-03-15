@@ -10,11 +10,10 @@ import cn.sric.util.Cat;
 import cn.sric.util.ConstUtil;
 import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities;
 import lombok.extern.slf4j.Slf4j;
-import love.forte.simbot.annotation.Filter;
-import love.forte.simbot.annotation.Filters;
-import love.forte.simbot.annotation.OnPrivate;
-import love.forte.simbot.annotation.OnPrivateMsgRecall;
+import love.forte.simbot.annotation.*;
+import love.forte.simbot.api.message.events.MsgGet;
 import love.forte.simbot.api.message.events.PrivateMsg;
 import love.forte.simbot.api.message.events.PrivateMsgRecall;
 import love.forte.simbot.api.sender.MsgSender;
@@ -40,6 +39,7 @@ import java.util.concurrent.TimeUnit;
  **/
 @Component
 @Slf4j
+@Listens(priority = 80,value ={@Listen(value = PrivateMsg.class)})
 public class PrivateListener {
 
     ThreadPoolExecutorUtil threadPoolExecutorUtil = new ThreadPoolExecutorUtil(2, 2, 0
@@ -52,9 +52,9 @@ public class PrivateListener {
     @Resource
     IListApiService iListApiService;
 
-
     @Resource
     IPictureDataService iPictureDataService;
+
     @Resource
     PrivateMessageMapper privateMessageMapper;
 
@@ -73,14 +73,7 @@ public class PrivateListener {
         privateMessageMapper.updateRecall(id);
     }
 
-    @OnPrivate
-    @Filters(customFilter = {"privatePrintLog"})
-    public void privateMessage(PrivateMsg privateMsg, MsgSender sender) throws InterruptedException {
-        String msg = privateMsg.getMsg();
-        msg = msg.replaceAll(" ", "");
-        String gossip = iListApiService.gossip(msg);
-        sender.SENDER.sendPrivateMsg(privateMsg, gossip);
-    }
+
 
 
     @OnPrivate

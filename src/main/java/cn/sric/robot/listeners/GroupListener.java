@@ -6,17 +6,12 @@ import cn.sric.dao.message.GroupMessageMapper;
 import cn.sric.service.common.IListApiService;
 import cn.sric.service.file.IPictureFileService;
 import cn.sric.service.group.AdminService;
-import cn.sric.util.Cat;
-import cn.sric.util.ConstUtil;
-import cn.sric.util.RedisUtil;
-import cn.sric.util.TApiUtil;
+import cn.sric.util.*;
 import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import love.forte.simbot.annotation.Filter;
-import love.forte.simbot.annotation.Filters;
-import love.forte.simbot.annotation.OnGroup;
-import love.forte.simbot.annotation.OnGroupMsgRecall;
+import love.forte.simbot.annotation.*;
 import love.forte.simbot.api.message.events.GroupMsg;
 import love.forte.simbot.api.message.events.GroupMsgRecall;
 import love.forte.simbot.api.sender.MsgSender;
@@ -142,22 +137,20 @@ public class GroupListener {
 
 
     @OnGroup()
-    @Filters(value = {@Filter(atBot = true)}, customFilter = {"groupPrintLog"})
+    @Filters(value = {@Filter(atBot = true, matchType = MatchType.STARTS_WITH, trim = true)}, customFilter = {"groupPrintLog"})
     public void groupVoice(GroupMsg groupMsg, MsgSender sender) {
-        String msg = groupMsg.getText().trim();
+        String msg = groupMsg.getText();
         String qq = groupMsg.getAccountInfo().getAccountCode();
-        if (msg.startsWith("说")) {
-            String voice = null;
-            try {
-                voice = TApiUtil.getVoice(msg);
-            } catch (Exception e) {
-                e.printStackTrace();
-                sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qq) + "看不懂你想BB什么。");
-            }
-            sender.SENDER.sendGroupMsg(groupMsg, Cat.getVoice(voice));
-            File file = new File(voice);
-            file.delete();
+        String voice = null;
+        try {
+            voice = TApiUtil.getVoice(msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qq) + "看不懂你想BB什么。");
         }
+        sender.SENDER.sendGroupMsg(groupMsg, Cat.getVoice(voice));
+        File file = new File(voice);
+        file.delete();
     }
 
     @OnGroupMsgRecall
@@ -175,5 +168,15 @@ public class GroupListener {
         sender.sendPrivateMsg(ConstUtil.QQ_CODE, message);
     }
 
+
+    @OnGroup
+    @Filters(value = {@Filter(value = "缩连接", matchType = MatchType.STARTS_WITH)}, customFilter = {"groupPrintLog"})
+    public void conversion(GroupMsg groupMsg, Sender sender) {
+        String msg = groupMsg.getMsg();
+        String url = msg.substring(msg.indexOf("缩连接") + 3);
+        String ret = OkHttp.get(ConstUtil.CONVERSION_URL(url));
+        String shortUrl = JSONObject.parseObject(ret).getJSONObject("result").getString("short_url");
+        sender.sendPrivateMsg(groupMsg, Cat.at(groupMsg.getAccountInfo().getAccountCode()) + "你要缩短的URL:" + url + "\n缩短后的URL为:" + shortUrl);
+    }
 
 }

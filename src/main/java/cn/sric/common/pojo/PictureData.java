@@ -62,6 +62,9 @@ public class PictureData implements Serializable {
      */
     private String tags;
 
+    private Long fileSize;
+
+
     /**
      * 文件在本地的路径
      */

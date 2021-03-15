@@ -1,6 +1,7 @@
 package cn.sric.service.picture;
 
 import cn.sric.common.pojo.PictureData;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import java.util.List;
 
@@ -37,7 +38,10 @@ public interface IPictureDataService {
      * @param is8
      * @return
      */
-    List<PictureData> randomFind(int num, boolean is8,String like);
+    List<PictureData> randomFind(int num, boolean is8, String like);
+
+
+    List<PictureData> pageFind(int current, int size, QueryWrapper<PictureData> queryWrapper);
 
 
 }
