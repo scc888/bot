@@ -41,7 +41,7 @@ public class PictureDataServiceImpl implements IPictureDataService {
     public boolean savePictureData(PictureData pictureData) {
         //根据pid 查询库里面是否存在数据
         QueryWrapper<PictureData> pictureDataQueryWrapper = new QueryWrapper<>();
-        pictureDataQueryWrapper.eq("pid", pictureData.getPid());
+        pictureDataQueryWrapper.eq("pid", pictureData.getPid()).eq("file_size", pictureData.getFileSize());
         PictureData pictureDataOne = pictureDataMapper.selectOne(pictureDataQueryWrapper);
         //判断查出来的数据是否为空，如果为空直接添加
         if (StringUtils.isEmpty(pictureDataOne)) {

@@ -3,12 +3,10 @@ package cn.sric.robot.listeners;
 import cn.sric.service.file.IPictureFileService;
 import cn.sric.util.ConstUtil;
 import lombok.extern.slf4j.Slf4j;
-import love.forte.simbot.annotation.Filter;
-import love.forte.simbot.annotation.Filters;
+import love.forte.simbot.annotation.*;
 import love.forte.simbot.api.message.events.PrivateMsg;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.filter.MatchType;
-import love.forte.simbot.filter.MostMatchType;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -22,13 +20,14 @@ import javax.annotation.Resource;
  **/
 @Component
 @Slf4j
+@Listens(priority = 0, value = {@Listen(value = PrivateMsg.class)})
 public class AdminListener {
 
     @Resource
     IPictureFileService pictureFileService;
 
-
-    @Filters(value = {@Filter(value = "定时任务", matchType = MatchType.ENDS_WITH)}, customFilter = {"isItMe"}, customMostMatchType = MostMatchType.ALL)
+    @OnPrivate
+    @Filters(value = {@Filter(value = "定时任务", matchType = MatchType.ENDS_WITH)}, customFilter = {"isItMe"})
     public void turnOnOrOff(PrivateMsg privateMsg, MsgSender sender) {
         String msg = privateMsg.getMsg();
         if ("开启定时任务".equals(msg)) {
@@ -40,7 +39,8 @@ public class AdminListener {
         }
     }
 
-    @Filters(value = {@Filter(value = "刷新本地图片", matchType = MatchType.ENDS_WITH)}, customFilter = {"isItMe"}, customMostMatchType = MostMatchType.ALL)
+    @OnPrivate
+    @Filters(value = {@Filter(value = "刷新本地图片", matchType = MatchType.EQUALS)}, customFilter = {"isItMe"})
     public void refresh(PrivateMsg privateMsg, MsgSender sender) {
         pictureFileService.refresh();
     }

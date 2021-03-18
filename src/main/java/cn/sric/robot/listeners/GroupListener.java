@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import love.forte.simbot.annotation.*;
 import love.forte.simbot.api.message.events.GroupMsg;
 import love.forte.simbot.api.message.events.GroupMsgRecall;
+import love.forte.simbot.api.message.events.PrivateMsg;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.api.sender.Sender;
 import love.forte.simbot.filter.MatchType;
@@ -137,7 +138,7 @@ public class GroupListener {
 
 
     @OnGroup()
-    @Filters(value = {@Filter(atBot = true, matchType = MatchType.STARTS_WITH, trim = true)}, customFilter = {"groupPrintLog"})
+    @Filters(value = {@Filter(value = "说", atBot = true, matchType = MatchType.STARTS_WITH, trim = true)}, customFilter = {"groupPrintLog"})
     public void groupVoice(GroupMsg groupMsg, MsgSender sender) {
         String msg = groupMsg.getText();
         String qq = groupMsg.getAccountInfo().getAccountCode();
@@ -153,7 +154,7 @@ public class GroupListener {
         file.delete();
     }
 
-    @OnGroupMsgRecall
+    @Listen(value = GroupMsgRecall.class)
     public void privateMsgRecall(GroupMsgRecall msgRecall, Sender sender) {
         String id = msgRecall.getId();
         groupMessageMapper.selectOne(new QueryWrapper<GroupMessage>().eq("msg_id", id).select("message"));
@@ -170,7 +171,7 @@ public class GroupListener {
 
 
     @OnGroup
-    @Filters(value = {@Filter(value = "缩连接", matchType = MatchType.STARTS_WITH)}, customFilter = {"groupPrintLog"})
+    @Filters(value = {@Filter(value = "缩Url", matchType = MatchType.STARTS_WITH)}, customFilter = {"groupPrintLog"})
     public void conversion(GroupMsg groupMsg, Sender sender) {
         String msg = groupMsg.getMsg();
         String url = msg.substring(msg.indexOf("缩连接") + 3);

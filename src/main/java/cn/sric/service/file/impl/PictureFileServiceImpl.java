@@ -150,7 +150,7 @@ public class PictureFileServiceImpl implements IPictureFileService {
     @Override
     public void refresh() {
         long start = System.currentTimeMillis();
-        ThreadPoolExecutorUtil executorService = new ThreadPoolExecutorUtil(3, 3,
+        ThreadPoolExecutorUtil executorService = new ThreadPoolExecutorUtil(10, 10,
                 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.CallerRunsPolicy());
         int size = 10;
         int count = iPictureDataService.findPictureCount(false);
@@ -168,8 +168,7 @@ public class PictureFileServiceImpl implements IPictureFileService {
             }
         }
 
-        Sender sender = SystemParam.msgSender.SENDER;
-        sender.sendPrivateMsg(ConstUtil.QQ_CODE, "总共要更新" + num + "条数据");
+        System.out.println("总共要更新" + num + "条数据");
 
         while (true) {
             try {
@@ -182,11 +181,11 @@ public class PictureFileServiceImpl implements IPictureFileService {
             //活动的线程的数量，也就是线程池在运行的最大数量
             int activeCount = executorService.getActiveCount();
 
-            sender.sendPrivateMsg(ConstUtil.QQ_CODE, "大概还剩余   [" + queue.size() + "]   条数据要更新");
+            System.out.println("大概还剩余   [" + queue.size() + "]   条数据要更新");
 
             if (queue.isEmpty() && activeCount == 0) {
                 long end = System.currentTimeMillis();
-                sender.sendPrivateMsg(ConstUtil.QQ_CODE, "更新完啦大概用了---->>>" + ((end - start) / 1000) + "秒");
+                System.out.println("更新完啦大概用了---->>>" + ((end - start) / 1000) + "秒");
                 executorService.shutdown();
                 break;
             }
