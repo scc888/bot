@@ -10,6 +10,8 @@ spring:
     password: root
     timeout: 60000
     database: 0
+  application:
+    name: simbot2-springboot
 
 server:
   port: 6999
@@ -47,6 +49,7 @@ logging:
     simbot.example: debug
     # simbot相关内容日志debug
     love.forte.simbot: debug
+  config: classpath:logback-spring.xml
 url:
   voice: /usr/sric/scc/voice/
   image: /usr/sric/scc/images/

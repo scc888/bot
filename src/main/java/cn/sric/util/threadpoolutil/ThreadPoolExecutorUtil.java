@@ -91,9 +91,12 @@ public class ThreadPoolExecutorUtil extends ThreadPoolExecutor {
         }
     }
 
+    static ThreadPoolExecutorUtil threadPoolExecutorUtil = new ThreadPoolExecutorUtil(5, 10,
+            0, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
+
+
     public static void main(String[] args) throws InterruptedException {
-        ThreadPoolExecutorUtil threadPoolExecutorUtil = new ThreadPoolExecutorUtil(5, 10,
-                0, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
+
 
         for (int i = 1; i <= 150; i++) {
 

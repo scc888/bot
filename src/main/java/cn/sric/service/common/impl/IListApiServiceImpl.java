@@ -143,10 +143,13 @@ public class IListApiServiceImpl implements IListApiService {
         return rest;
     }
 
+    @Override
+    public String solitaireGame(String msg) {
+        return OkHttp.get("http://i.itpk.cn/api.php?question=@cy" + msg);
+    }
+
 
     public static void main(String[] args) throws Exception {
-        IListApiServiceImpl iListApiService = new IListApiServiceImpl();
-        System.out.println(iListApiService.voice("刘叔牛逼"));
 
     }
 }

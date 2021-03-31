@@ -41,14 +41,14 @@ public class PictureDataServiceImpl implements IPictureDataService {
     public boolean savePictureData(PictureData pictureData) {
         //根据pid 查询库里面是否存在数据
         QueryWrapper<PictureData> pictureDataQueryWrapper = new QueryWrapper<>();
-        pictureDataQueryWrapper.eq("pid", pictureData.getPid()).eq("file_size", pictureData.getFileSize());
+        pictureDataQueryWrapper.eq("pid", pictureData.getPid());
         PictureData pictureDataOne = pictureDataMapper.selectOne(pictureDataQueryWrapper);
         //判断查出来的数据是否为空，如果为空直接添加
         if (StringUtils.isEmpty(pictureDataOne)) {
             return pictureDataMapper.insert(pictureData) > 0;
         }
         //数据不为空，判断一下传过来的本地路径是否和库里的本地路径一致，如果不一致则修改库的本地路径，如果一致返回true;
-        if (!pictureDataOne.getLocalUrl().equals(pictureData.getLocalUrl()) && !pictureData.getLocalUrl().equals(ConstUtil.XXX)) {
+        if ((!pictureDataOne.getLocalUrl().equals(pictureData.getLocalUrl()) && !pictureData.getLocalUrl().equals(ConstUtil.XXX)) || (!pictureDataOne.getFileSize().equals(pictureData.getFileSize()) && pictureData.getFileSize() != 0)) {
             return pictureDataMapper.updateLocalUrlById(pictureDataOne.getId(), pictureData.getLocalUrl()) > 0;
         }
         return true;

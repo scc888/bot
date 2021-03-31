@@ -17,9 +17,9 @@ public class PictureFilter {
     @Component("picture")
     @Async
     public static class Picture implements ListenerFilter {
-        @Override
-        public boolean test(@NotNull FilterData data) {
-            List<String> list = new ArrayList<>();
+        static List<String> list = new ArrayList<>();
+
+        static {
             list.add("图来");
             list.add("来点图片");
             list.add("r18色图");
@@ -40,6 +40,11 @@ public class PictureFilter {
             list.add("来份涩图");
             list.add("来点好看的");
             list.add("来点好康的");
+
+        }
+
+        @Override
+        public boolean test(@NotNull FilterData data) {
             MsgGet msgget = data.getMsgGet();
             if (msgget instanceof GroupMsg) {
                 String message = ((GroupMsg) msgget).getMsg().trim();

@@ -1,17 +1,10 @@
 package cn.sric.util;
 
-import cn.xsshome.taip.base.BaseClient;
 import cn.xsshome.taip.nlp.TAipNlp;
 import cn.xsshome.taip.speech.TAipSpeech;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author sunchuanchuan
@@ -49,7 +42,7 @@ public class TApiUtil {
         result = client.TtsSynthesis(text, speaker, format, volume, speed, aht, apc);
         JSONObject jsonObject = JSON.parseObject(result);
         String speech = jsonObject.getJSONObject("data").getString("speech");
-        retUrl = Base64Util.decodeBase64(speech, ConstUtil.VOICE_URL, "WAV", false);
+        retUrl = Base64Util.decodeBase64(speech, "C:\\Users\\sric\\Desktop\\image\\", "WAV", false);
         return retUrl;
     }
 
@@ -107,6 +100,12 @@ public class TApiUtil {
         String result = null;//意图成分识别
         try {
             result = aipNlp.nlpWordcom(text);
+            JSONObject resp = JSONObject.parseObject(result);
+            if (resp.getInteger("ret")==0) {
+                result = resp.getString("data");
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,7 +113,8 @@ public class TApiUtil {
     }
 
 
-    @Deprecated
+
+
     public static String emotion(String text) {
         String result = null;
         try {
@@ -126,7 +126,7 @@ public class TApiUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(getVoice("张俊高数大家,红鲤鱼与绿鲤鱼与驴"));
+        System.out.println(intention("你家在哪里?"));
     }
 
 }

@@ -150,7 +150,8 @@ public class PictureFileServiceImpl implements IPictureFileService {
     @Override
     public void refresh() {
         long start = System.currentTimeMillis();
-        ThreadPoolExecutorUtil executorService = new ThreadPoolExecutorUtil(10, 10,
+        System.out.println(LocalDateTime.now().format(ConstUtil.DATE_TIME_FORMATTER) + "<<<<<<<<<<<<<<<<------------开始");
+        ThreadPoolExecutorUtil executorService = new ThreadPoolExecutorUtil(0, 1,
                 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.CallerRunsPolicy());
         int size = 10;
         int count = iPictureDataService.findPictureCount(false);

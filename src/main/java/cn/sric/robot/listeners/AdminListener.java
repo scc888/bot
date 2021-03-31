@@ -20,29 +20,32 @@ import javax.annotation.Resource;
  **/
 @Component
 @Slf4j
-@Listens(priority = 0, value = {@Listen(value = PrivateMsg.class)})
+
 public class AdminListener {
 
     @Resource
     IPictureFileService pictureFileService;
 
-    @OnPrivate
+    @Listens(priority = 0, value = {@Listen(value = PrivateMsg.class)})
     @Filters(value = {@Filter(value = "定时任务", matchType = MatchType.ENDS_WITH)}, customFilter = {"isItMe"})
     public void turnOnOrOff(PrivateMsg privateMsg, MsgSender sender) {
         String msg = privateMsg.getMsg();
         if ("开启定时任务".equals(msg)) {
             ConstUtil.IS_TASK = true;
-            sender.SENDER.sendPrivateMsg(privateMsg, "开启定时任务");
+            sender.SENDER.sendPrivateMsg(privateMsg, "已开启定时任务");
         } else if ("关闭定时任务".equals(msg)) {
             ConstUtil.IS_TASK = false;
             sender.SENDER.sendPrivateMsg(privateMsg, "关闭定时任务");
         }
     }
 
-    @OnPrivate
+    @Listens(priority = 0, value = {@Listen(value = PrivateMsg.class)})
     @Filters(value = {@Filter(value = "刷新本地图片", matchType = MatchType.EQUALS)}, customFilter = {"isItMe"})
     public void refresh(PrivateMsg privateMsg, MsgSender sender) {
+        long start = System.currentTimeMillis();
+        sender.SENDER.sendPrivateMsg(ConstUtil.QQ_CODE, "准备开始刷新");
         pictureFileService.refresh();
+        sender.SENDER.sendPrivateMsg(ConstUtil.QQ_CODE, "刷新图片结束大概用了" + (System.currentTimeMillis() - start) / 1000 + "秒");
     }
 
 

@@ -18,16 +18,16 @@ import java.util.List;
  **/
 @Mapper
 public interface PictureDataMapper extends BaseMapper<PictureData> {
-    /**
+   /* *//**
      * 随机查询几条信息
      *
      * @param num
      * @param isR
      * @return
-     */
+     *//*
     List<PictureData> randomFind(@Param("num") Integer num, @Param("isR") Integer isR);
 
-
+*/
     /**
      * 随机查询几条信息
      *

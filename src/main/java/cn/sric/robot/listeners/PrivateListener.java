@@ -39,10 +39,10 @@ import java.util.concurrent.TimeUnit;
  **/
 @Component
 @Slf4j
-@Listens(priority = 80,value ={@Listen(value = PrivateMsg.class)})
+@Listens(priority = 80, value = {@Listen(value = PrivateMsg.class)})
 public class PrivateListener {
 
-    ThreadPoolExecutorUtil threadPoolExecutorUtil = new ThreadPoolExecutorUtil(2, 2, 0
+    ThreadPoolExecutorUtil threadPoolExecutorUtil = new ThreadPoolExecutorUtil(0, 2, 0
             , TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.CallerRunsPolicy());
 
 
@@ -72,8 +72,6 @@ public class PrivateListener {
         sender.sendPrivateMsg(ConstUtil.QQ_CODE, "这个人\n账号:" + code + "\n昵称:" + name + "\n想撤回" + msg);
         privateMessageMapper.updateRecall(id);
     }
-
-
 
 
     @OnPrivate
@@ -169,7 +167,16 @@ public class PrivateListener {
         } catch (Exception e) {
             sender.SENDER.sendPrivateMsg(privateMsg, "解禁的正确格式为:\n 解禁群号:{groupCode},账号:{qqCode}");
             sender.SENDER.sendPrivateMsg(privateMsg, "禁言的正确格式为:\n 禁言群号:{groupCode},时长:{time}。账号:{qqCode}");
-
         }
+    }
+
+
+    @OnPrivate
+    @Filters(value = {@Filter(value = "接龙", matchType = MatchType.STARTS_WITH, trim = true)})
+    public void solitaireGame(PrivateMsg privateMsg, MsgSender sender) {
+        String msg = privateMsg.getMsg();
+        msg = msg.substring(msg.indexOf("接龙") + 2);
+        String game = iListApiService.solitaireGame(msg);
+        sender.SENDER.sendPrivateMsg(privateMsg, game);
     }
 }

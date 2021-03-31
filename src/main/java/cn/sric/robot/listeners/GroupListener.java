@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class GroupListener {
 
-    ThreadPoolExecutorUtil threadPoolExecutorUtil = new ThreadPoolExecutorUtil(2, 2, 0
+    ThreadPoolExecutorUtil threadPoolExecutorUtil = new ThreadPoolExecutorUtil(0, 2, 0
             , TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.CallerRunsPolicy());
 
     @Resource

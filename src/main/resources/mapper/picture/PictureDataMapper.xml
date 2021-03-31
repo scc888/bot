@@ -7,9 +7,20 @@
     <select id="randomFind" resultType="PictureData">
         select * from
         picture_data
-        <if test="isR != null">
-            where r18=#{isR}
-        </if>
+        <where>
+
+            <if test="isR != null">
+                and r18=#{isR}
+            </if>
+
+            <if test="like !=null and like!='' ">
+                and tags like "%#{like}%"
+            </if>
+
+            --
+        </where>
+
+
         ORDER BY RAND() LIMIT #{num}
     </select>
 </mapper>

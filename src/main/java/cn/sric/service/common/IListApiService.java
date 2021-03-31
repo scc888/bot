@@ -56,4 +56,7 @@ public interface IListApiService {
 
     String translate(String msg);
 
+
+
+    String solitaireGame(String msg);
 }
