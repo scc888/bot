@@ -151,7 +151,7 @@ public class PictureFileServiceImpl implements IPictureFileService {
     public void refresh() {
         long start = System.currentTimeMillis();
         System.out.println(LocalDateTime.now().format(ConstUtil.DATE_TIME_FORMATTER) + "<<<<<<<<<<<<<<<<------------开始");
-        ThreadPoolExecutorUtil executorService = new ThreadPoolExecutorUtil(0, 1,
+        ThreadPoolExecutorUtil executorService = new ThreadPoolExecutorUtil(0, 10,
                 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.CallerRunsPolicy());
         int size = 10;
         int count = iPictureDataService.findPictureCount(false);
@@ -193,12 +193,11 @@ public class PictureFileServiceImpl implements IPictureFileService {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
-        String url = "C:\\Users\\sric\\Desktop\\image\\123123.png";
-        File file = new File(url);
-        System.out.println(Math.round(file.length()));
-        System.out.println((file.length() / 1024));
+        for (int i=0;i<144;){
+            System.out.println("drop  TABLE user_"+ ++i +";");
+        }
 
     }
 }

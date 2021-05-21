@@ -1,5 +1,10 @@
 package cn.sric.util;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Twitter_Snowflake<br>
  * SnowFlake的结构如下(每部分用-分开):<br>
@@ -170,7 +175,23 @@ public class SnowFlakeUtil {
     }
 
 
-    public static void main(String[] args) {
-        String id = nextId();
+    public static void main(String[] args) throws InterruptedException {
+        AtomicInteger num = new AtomicInteger();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", 94);
+        for (int j = 0; j < 30; j++) {
+            new Thread(() -> {
+                for (int i = 0; i < 1; ) {
+                    num.getAndIncrement();
+                    String post = OkHttp.post("https://passport.csdn.net/v1/api/add/homeWordCount", map);
+                    System.out.println(post);
+                }
+            }).start();
+        }
+        TimeUnit.DAYS.sleep(1);
+
+
+
     }
 }

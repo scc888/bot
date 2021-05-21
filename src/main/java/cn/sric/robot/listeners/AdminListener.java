@@ -2,11 +2,13 @@ package cn.sric.robot.listeners;
 
 import cn.sric.service.file.IPictureFileService;
 import cn.sric.util.ConstUtil;
+import cn.sric.util.FilterUtil;
 import lombok.extern.slf4j.Slf4j;
 import love.forte.simbot.annotation.*;
 import love.forte.simbot.api.message.events.PrivateMsg;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.filter.MatchType;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,7 +29,7 @@ public class AdminListener {
     IPictureFileService pictureFileService;
 
     @Listens(priority = 0, value = {@Listen(value = PrivateMsg.class)})
-    @Filters(value = {@Filter(value = "定时任务", matchType = MatchType.ENDS_WITH)}, customFilter = {"isItMe"})
+    @Filters(value = {@Filter(value = "定时任务", matchType = MatchType.ENDS_WITH)}, customFilter = {FilterUtil.IS_ItME})
     public void turnOnOrOff(PrivateMsg privateMsg, MsgSender sender) {
         String msg = privateMsg.getMsg();
         if ("开启定时任务".equals(msg)) {
@@ -40,7 +42,7 @@ public class AdminListener {
     }
 
     @Listens(priority = 0, value = {@Listen(value = PrivateMsg.class)})
-    @Filters(value = {@Filter(value = "刷新本地图片", matchType = MatchType.EQUALS)}, customFilter = {"isItMe"})
+    @Filters(value = {@Filter(value = "刷新本地图片", matchType = MatchType.EQUALS)}, customFilter = {FilterUtil.IS_ItME})
     public void refresh(PrivateMsg privateMsg, MsgSender sender) {
         long start = System.currentTimeMillis();
         sender.SENDER.sendPrivateMsg(ConstUtil.QQ_CODE, "准备开始刷新");

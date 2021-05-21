@@ -11,10 +11,12 @@ import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import love.forte.simbot.annotation.*;
+import love.forte.simbot.annotation.Filter;
+import love.forte.simbot.annotation.Filters;
+import love.forte.simbot.annotation.Listen;
+import love.forte.simbot.annotation.OnGroup;
 import love.forte.simbot.api.message.events.GroupMsg;
 import love.forte.simbot.api.message.events.GroupMsgRecall;
-import love.forte.simbot.api.message.events.PrivateMsg;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.api.sender.Sender;
 import love.forte.simbot.filter.MatchType;
@@ -59,7 +61,7 @@ public class GroupListener {
     RedisUtil redisUtil;
 
     @OnGroup()
-    @Filters(customFilter = {"picture", "groupPrintLog"}, customMostMatchType = MostMatchType.ALL)
+    @Filters(customFilter = {FilterUtil.PICTURE, FilterUtil.GROUP_PRINT_LOG}, customMostMatchType = MostMatchType.ALL)
     public void groupPicture(GroupMsg groupMsg, MsgSender sender) {
         String qq = groupMsg.getAccountInfo().getAccountCode();
         String msg = groupMsg.getMsg();
@@ -90,7 +92,7 @@ public class GroupListener {
 
 
     @OnGroup()
-    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.REVIEW, matchType = MatchType.STARTS_WITH))
+    @Filters(customFilter = {FilterUtil.GROUP_PRINT_LOG}, value = @Filter(value = ConstUtil.REVIEW, matchType = MatchType.STARTS_WITH))
     public void review(GroupMsg groupMsg, MsgSender sender) {
         String qq = groupMsg.getAccountInfo().getAccountCode();
         Map<String, String> map = iListApiService.review();
@@ -99,20 +101,20 @@ public class GroupListener {
     }
 
     @OnGroup()
-    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.BANNED, matchType = MatchType.STARTS_WITH))
+    @Filters(customFilter = {FilterUtil.GROUP_PRINT_LOG}, value = @Filter(value = ConstUtil.BANNED, matchType = MatchType.STARTS_WITH))
     public void banNed(GroupMsg groupMsg, MsgSender sender) {
         adminService.getThePackage(groupMsg, sender);
     }
 
     @OnGroup()
-    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.FAN_YI, matchType = MatchType.STARTS_WITH))
+    @Filters(customFilter = {FilterUtil.GROUP_PRINT_LOG}, value = @Filter(value = ConstUtil.FAN_YI, matchType = MatchType.STARTS_WITH))
     public void fanYi(GroupMsg groupMsg, MsgSender sender) {
         String translate = iListApiService.translate(groupMsg.getMsg());
         sender.SENDER.sendGroupMsg(groupMsg, translate);
     }
 
     @OnGroup()
-    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.QR, matchType = MatchType.STARTS_WITH))
+    @Filters(customFilter = {FilterUtil.GROUP_PRINT_LOG}, value = @Filter(value = ConstUtil.QR, matchType = MatchType.STARTS_WITH))
     public void qr(GroupMsg groupMsg, MsgSender sender) {
         String msg = groupMsg.getMsg();
         String file = iListApiService.findQr(msg);
@@ -121,7 +123,7 @@ public class GroupListener {
     }
 
     @OnGroup()
-    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.MUSIC_TEST, matchType = MatchType.STARTS_WITH))
+    @Filters(customFilter = {FilterUtil.GROUP_PRINT_LOG}, value = @Filter(value = ConstUtil.MUSIC_TEST, matchType = MatchType.STARTS_WITH))
     public void musicTest(GroupMsg groupMsg, MsgSender sender) {
         String msg = groupMsg.getMsg();
         String music = Cat.getMusic(msg.substring(msg.indexOf("歌") + 1));
@@ -129,16 +131,15 @@ public class GroupListener {
     }
 
     @OnGroup()
-    @Filters(customFilter = {"groupPrintLog"}, value = @Filter(value = ConstUtil.BAI_DU, matchType = MatchType.STARTS_WITH))
+    @Filters(customFilter = {FilterUtil.GROUP_PRINT_LOG}, value = @Filter(value = ConstUtil.BAI_DU, matchType = MatchType.STARTS_WITH))
     public void baiDu(GroupMsg groupMsg, MsgSender sender) {
         String msg = groupMsg.getMsg();
         String s = iListApiService.letMeBaiDu(msg);
         sender.SENDER.sendGroupMsg(groupMsg, s);
     }
 
-
     @OnGroup()
-    @Filters(value = {@Filter(value = "说", atBot = true, matchType = MatchType.STARTS_WITH, trim = true)}, customFilter = {"groupPrintLog"})
+    @Filters(value = {@Filter(value = "说", atBot = true, matchType = MatchType.STARTS_WITH, trim = true)}, customFilter = {FilterUtil.GROUP_PRINT_LOG})
     public void groupVoice(GroupMsg groupMsg, MsgSender sender) {
         String msg = groupMsg.getText();
         String qq = groupMsg.getAccountInfo().getAccountCode();
@@ -171,7 +172,7 @@ public class GroupListener {
 
 
     @OnGroup
-    @Filters(value = {@Filter(value = "缩Url", matchType = MatchType.STARTS_WITH)}, customFilter = {"groupPrintLog"})
+    @Filters(value = {@Filter(value = "缩Url", matchType = MatchType.STARTS_WITH)}, customFilter = {FilterUtil.GROUP_PRINT_LOG})
     public void conversion(GroupMsg groupMsg, Sender sender) {
         String msg = groupMsg.getMsg();
         String url = msg.substring(msg.indexOf("缩连接") + 3);

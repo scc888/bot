@@ -8,6 +8,7 @@ import cn.sric.service.file.IPictureFileService;
 import cn.sric.service.picture.IPictureDataService;
 import cn.sric.util.Cat;
 import cn.sric.util.ConstUtil;
+import cn.sric.util.FilterUtil;
 import cn.sric.util.threadpoolutil.ThreadPoolExecutorUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities;
@@ -82,7 +83,7 @@ public class PrivateListener {
     }
 
     @OnPrivate
-    @Filters(value = {@Filter(value = "查看总数", matchType = MatchType.STARTS_WITH, trim = true)}, customFilter = {"isItMe"})
+    @Filters(value = {@Filter(value = "查看总数", matchType = MatchType.STARTS_WITH, trim = true)}, customFilter = {FilterUtil.IS_ItME})
     public void getCountPicture(PrivateMsg privateMsg, Sender senderMsg) {
         senderMsg.sendPrivateMsg(privateMsg, "总数数量为:" + iPictureDataService.findPictureCount(false));
         senderMsg.sendPrivateMsg(privateMsg, "true数量为:" + iPictureDataService.findPictureCount(true));
@@ -149,7 +150,7 @@ public class PrivateListener {
 
 
     @OnPrivate
-    @Filters(customFilter = {"isItMe", "botIsAdmin"}, customMostMatchType = MostMatchType.ALL, value = {@Filter(value = "解禁", matchType = MatchType.STARTS_WITH, trim = true), @Filter(value = "禁言", matchType = MatchType.STARTS_WITH, trim = true)})
+    @Filters(customFilter = {FilterUtil.IS_ItME, FilterUtil.BOT_IS_ADMIN}, customMostMatchType = MostMatchType.ALL, value = {@Filter(value = "解禁", matchType = MatchType.STARTS_WITH, trim = true), @Filter(value = "禁言", matchType = MatchType.STARTS_WITH, trim = true)})
     public void groupSetGroupBan(PrivateMsg privateMsg, MsgSender sender) {
         try {
             String msg = privateMsg.getMsg();

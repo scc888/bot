@@ -183,4 +183,13 @@ public class ConstUtil {
 
     //用来判断定时任务是否开启
     public static boolean IS_TASK = true;
+
+
+
+
+
+
+
+
+
 }

@@ -1,3 +1,4 @@
+/*
 package cn.sric.common.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -10,13 +11,15 @@ import org.springframework.scheduling.support.CronTrigger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+*/
 /**
  * @author sunchuanchuan
  * @version V1.0
  * @date 2021/3/12
  * @package cn.sric.common.config
  * @description
- **/
+ **//*
+
 @Configuration
 public class TaskSchedulingConfigurer implements SchedulingConfigurer {
     private String cron = "0 0/1 * * * ?";
@@ -39,3 +42,4 @@ public class TaskSchedulingConfigurer implements SchedulingConfigurer {
 
     }
 }
+*/

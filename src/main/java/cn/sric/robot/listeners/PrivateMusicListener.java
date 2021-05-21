@@ -4,6 +4,7 @@ import cn.sric.common.pojo.ResultMessage;
 import cn.sric.music.service.ILoginService;
 import cn.sric.music.service.IMusicService;
 import cn.sric.util.Cat;
+import cn.sric.util.FilterUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import love.forte.simbot.annotation.Filter;
@@ -39,7 +40,7 @@ public class PrivateMusicListener {
 
 
     @OnPrivate
-    @Filters(value = {@Filter(value = "登录网易云", matchType = MatchType.STARTS_WITH)}, customFilter = {"privatePrintLog"})
+    @Filters(value = {@Filter(value = "登录网易云", matchType = MatchType.STARTS_WITH)}, customFilter = {FilterUtil.PRIVATE_PRINT_LOG})
     public void refreshPicture(PrivateMsg privateMsg, Sender sender) {
         String code = privateMsg.getAccountInfo().getAccountCode();
         ResultMessage<String> login = iLoginService.login(privateMsg.getMsg(), code);
@@ -53,7 +54,7 @@ public class PrivateMusicListener {
     }
 
     @OnPrivate
-    @Filters(value = {@Filter(value = "退出网易云", matchType = MatchType.EQUALS)}, customFilter = {"privatePrintLog"})
+    @Filters(value = {@Filter(value = "退出网易云", matchType = MatchType.EQUALS)}, customFilter = {FilterUtil.PRIVATE_PRINT_LOG})
     public void logout(PrivateMsg privateMsg, Sender sender) {
         String code = privateMsg.getAccountInfo().getAccountCode();
         ResultMessage<String> logout = null;
@@ -68,7 +69,7 @@ public class PrivateMusicListener {
     }
 
     @OnPrivate
-    @Filters(value = {@Filter(value = "今日推荐音乐", matchType = MatchType.EQUALS)}, customFilter = {"privatePrintLog"})
+    @Filters(value = {@Filter(value = "今日推荐音乐", matchType = MatchType.EQUALS)}, customFilter = {FilterUtil.PRIVATE_PRINT_LOG})
     public void recommend(PrivateMsg privateMsg, Sender sender) throws InterruptedException {
         String code = privateMsg.getAccountInfo().getAccountCode();
         ResultMessage<?> recommend = iMusicService.getRecommend(code);

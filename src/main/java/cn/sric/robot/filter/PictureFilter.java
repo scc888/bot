@@ -22,16 +22,6 @@ public class PictureFilter {
         static {
             list.add("图来");
             list.add("来点图片");
-            list.add("r18色图");
-            list.add("r18涩图");
-            list.add("来点r18色图");
-            list.add("来点r18涩图");
-            list.add("来一份r18色图");
-            list.add("来一份r18涩图");
-            list.add("来份r18色图");
-            list.add("来份r18涩图");
-            list.add("色图");
-            list.add("涩图");
             list.add("来点色图");
             list.add("来点涩图");
             list.add("来一份色图");

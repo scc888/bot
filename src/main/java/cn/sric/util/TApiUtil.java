@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
  * @package cn.sric.util
  * @description
  **/
-@Slf4j
-public class TApiUtil {
-    static TAipNlp aipNlp = new TAipNlp(ConstUtil.APP_ID, ConstUtil.APP_KEY);
-    static TAipSpeech client = new TAipSpeech(ConstUtil.APP_ID, ConstUtil.APP_KEY);
+    @Slf4j
+    public class TApiUtil {
+        static TAipNlp aipNlp = new TAipNlp(ConstUtil.APP_ID, ConstUtil.APP_KEY);
+        static TAipSpeech client = new TAipSpeech(ConstUtil.APP_ID, ConstUtil.APP_KEY);
 
 
     /**
@@ -42,7 +42,7 @@ public class TApiUtil {
         result = client.TtsSynthesis(text, speaker, format, volume, speed, aht, apc);
         JSONObject jsonObject = JSON.parseObject(result);
         String speech = jsonObject.getJSONObject("data").getString("speech");
-        retUrl = Base64Util.decodeBase64(speech, "C:\\Users\\sric\\Desktop\\image\\", "WAV", false);
+        retUrl = Base64Util.decodeBase64(speech, ConstUtil.VOICE_URL, "WAV", false);
         return retUrl;
     }
 
