@@ -84,6 +84,7 @@ public class GroupListener {
                 sender.SENDER.sendGroupMsg(groupMsg, Cat.at(qq) + "老色批爪巴");
                 redisUtil.set("picture" + qq, "停止刷图5分钟", 300, TimeUnit.SECONDS);
             } else {
+                sender.SENDER.sendGroupMsg(groupMsg, "请稍后");
                 String url = pictureFileService.randomFind(fal, trgs);
                 sender.SENDER.sendGroupMsg(groupMsg, Cat.getImage(url));
             }

@@ -56,7 +56,7 @@ public class DownloadTask {
                 start + "\n开始总数为:" + startCount);
         log.info("开始时间---:" + start
                 + "\n开始总数为:" + startCount);
-        int num = 300;
+        int num = 200;
         for (int i = 0; i < num; i++) {
             taskExecutorService.execute(() -> {
                 System.out.println("线程" + Thread.currentThread().getName() + "正在运行第:" + ++a + "次");

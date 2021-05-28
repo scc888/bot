@@ -96,10 +96,12 @@ public class PictureFileServiceImpl implements IPictureFileService {
                     File file = new File(download);
                     long l = file.length() / 1024;
                     pictureData.setLocalUrl(download).setFileSize(l);
+                    file.delete();
                 }
                 retString.add(download);
                 try {
                     iPictureDataService.savePictureData(pictureData);
+
                 } catch (Exception e) {
                     SystemParam.msgSender.SENDER.sendPrivateMsg(ConstUtil.QQ_CODE, "储存图片信息时出现错误 \n时间:" + LocalDateTime.now().format(ConstUtil.DATE_TIME_FORMATTER));
                     log.info("储存图片信息时出现错误 \n时间:" + LocalDateTime.now().format(ConstUtil.DATE_TIME_FORMATTER) + "\n信息为:{}", pictureData.toString());
@@ -195,8 +197,8 @@ public class PictureFileServiceImpl implements IPictureFileService {
 
     public static void main(String[] args) {
 
-        for (int i=0;i<144;){
-            System.out.println("drop  TABLE user_"+ ++i +";");
+        for (int i = 0; i < 144; ) {
+            System.out.println("drop  TABLE user_" + ++i + ";");
         }
 
     }
