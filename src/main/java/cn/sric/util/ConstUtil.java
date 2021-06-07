@@ -25,7 +25,6 @@ public class ConstUtil {
     public static final String APP_KEY = "SzzM2xeqSU9l7N94";
 
 
-    public static final String QQ_CODE = "2472560050";
     public static final String GROUP_CODE = "555933776";
     /**
      * 时间格式
@@ -134,7 +133,14 @@ public class ConstUtil {
         FILE_URL = url;
     }
 
+    public static String QqCode;
 
+    @Value("${code.qq}")
+    public void setQqCode(String qq) {
+        QqCode = qq;
+    }
+
+    public static final String QQ_CODE = QqCode;
     /**
      * 最终的路径
      */
@@ -170,7 +176,6 @@ public class ConstUtil {
 
 
     public final static String BANNED = "领取套餐";
-    public final static String PICTURE = "来点图片";
     public final static String SE_TU = "来点涩图";
     public final static String BAI_DU = "百度";
     public final static String REVIEW = "网易云热评";
@@ -183,13 +188,6 @@ public class ConstUtil {
 
     //用来判断定时任务是否开启
     public static boolean IS_TASK = true;
-
-
-
-
-
-
-
 
 
 }

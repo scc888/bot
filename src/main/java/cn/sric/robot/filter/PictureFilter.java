@@ -1,5 +1,6 @@
 package cn.sric.robot.filter;
 
+import cn.sric.util.FilterUtil;
 import love.forte.simbot.api.message.events.GroupMsg;
 import love.forte.simbot.api.message.events.MsgGet;
 import love.forte.simbot.filter.FilterData;
@@ -14,7 +15,7 @@ import java.util.List;
 @Component
 public class PictureFilter {
 
-    @Component("picture")
+    @Component(FilterUtil.PICTURE)
     @Async
     public static class Picture implements ListenerFilter {
         static List<String> list = new ArrayList<>();

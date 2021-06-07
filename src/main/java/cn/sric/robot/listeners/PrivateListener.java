@@ -129,7 +129,7 @@ public class PrivateListener {
     }
 
     @OnPrivate
-    @Filters(value = {@Filter(value = ConstUtil.PICTURE, matchType = MatchType.STARTS_WITH, trim = true), @Filter(value = ConstUtil.TU_LAI, matchType = MatchType.STARTS_WITH, trim = true)})
+    @Filters(customFilter = {FilterUtil.PICTURE})
     public void privatePicture(PrivateMsg privateMsg, Sender senderMsg) {
         String finalMsg = privateMsg.getMsg();
         threadPoolExecutorUtil.execute(() -> {
